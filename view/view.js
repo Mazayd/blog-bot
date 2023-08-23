@@ -36,8 +36,35 @@ class View {
   }
 
   async mainMenu(ctx) {
-    ctx.reply(ctx.i18n.t("phrases.mainMenu"), this.#keyboards.mainMenu(ctx));
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+    const userData = ctx.i18n
+      .t("phrases.userData")
+      .replace("$telegramId", user.telegramId)
+      .replace("$userName", user.name)
+      .replace("$userNickname", user.nickName)
+      .replace("$userAge", user.age)
+      .replace("$userSex", user.sex);
+    ctx.reply(
+      `${ctx.i18n.t("phrases.mainMenu")}\n\n${userData}`,
+      this.#keyboards.mainMenu(ctx)
+    );
     ctx.scene.enter("mainMenu");
+  }
+
+  async userSetting(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.userSetting"),
+      this.#keyboards.userSetting(ctx)
+    );
+    ctx.scene.enter("userSetting");
+  }
+
+  async userSettingName(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.userSettingName"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("userSettingName");
   }
 }
 

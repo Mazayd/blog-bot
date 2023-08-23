@@ -15,6 +15,24 @@ class Keyboards {
       .resize()
       .extra();
   }
+
+  backAndMainMenu(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
+    ])
+      .resize()
+      .extra();
+  }
+
+  userSetting(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back")],
+      [ctx.i18n.t("buttons.userName"), ctx.i18n.t("buttons.userNickname")],
+      [ctx.i18n.t("buttons.userAge"), ctx.i18n.t("buttons.userSex")],
+    ])
+      .resize()
+      .extra();
+  }
 }
 
 module.exports = {

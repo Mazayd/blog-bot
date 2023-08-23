@@ -9,6 +9,10 @@ const {
 const {
   RegisterController,
 } = require("./src/controllers/choice-nickname.controller");
+const { MenusController } = require("./src/controllers/menus.controller");
+const {
+  UserSettingController,
+} = require("./src/controllers/user-setting.controler");
 
 const i18n = new I18n({
   directory: path.join(__dirname, "src/locales"),
@@ -33,6 +37,16 @@ dotenv.config();
     CommentServices
   );
   const registerController = new RegisterController(
+    UserServices,
+    PostServices,
+    CommentServices
+  );
+  const menusController = new MenusController(
+    UserServices,
+    PostServices,
+    CommentServices
+  );
+  const userSettingController = new UserSettingController(
     UserServices,
     PostServices,
     CommentServices
@@ -62,13 +76,22 @@ dotenv.config();
   const firstChoiceSex = new BaseScene("firstChoiceSex");
   stage.register(firstChoiceSex);
 
+  const userSetting = new BaseScene("userSetting");
+  stage.register(userSetting);
+  const userSettingName = new BaseScene("userSettingName");
+  stage.register(userSettingName);
+  const userSettingNickname = new BaseScene("userSettingNickname");
+  stage.register(userSettingNickname);
+  const userSettingAge = new BaseScene("userSettingAge");
+  stage.register(userSettingAge);
+  const userSettingSex = new BaseScene("userSettingSex");
+  stage.register(userSettingSex);
+
   bot.use(stage.middleware());
 
   bot.catch(console.log);
 
-  bot.start(
-    defaultActionController.noScenesReply.bind(defaultActionController)
-  );
+  bot.start(defaultActionController.startReply.bind(defaultActionController));
 
   firstChoiceNickname.on(
     "text",
@@ -81,6 +104,17 @@ dotenv.config();
   firstChoiceSex.on(
     "text",
     registerController.firstChoiceSex.bind(registerController)
+  );
+
+  mainMenu.on("text", menusController.mainMenu.bind(menusController));
+
+  userSetting.on(
+    "text",
+    userSettingController.userSetting.bind(userSettingController)
+  );
+  userSettingName.on(
+    "text",
+    userSettingController.userSettingName.bind(userSettingController)
   );
 
   bot.launch();

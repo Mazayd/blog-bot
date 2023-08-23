@@ -5,15 +5,19 @@
     "firstChoiceAge": "Введите ваш возраст",
     "firstChoiceSex": "Выберете свой пол",
     "mainMenu": "Вы в главном меню",
-    "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n"
+    "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n",
+    "userSetting": "Выберете параметр который хочете изменить",
+    "userSettingName": "Напишите имя которое вы хотите установить"
   },
   "buttons": {
-    "userSetting": "Настройки аккаунта",
-    "userName": "Изменить имя",
-    "userSex": "Изменить пол",
+    "back": "Назад",
+    "mainMenu": "Главное меню",
     "men": "Мужчина",
     "women": "Женщина",
-    "userAge": "Изменить возраст",
-    "userNickname": "Изменить никнейм"
+    "userSetting": "Настройки аккаунта",
+    "userName": "Имя",
+    "userSex": "Пол",
+    "userAge": "Возраст",
+    "userNickname": "Никнейм"
   }
 }
