@@ -1,7 +1,6 @@
-const Context = require("telegraf");
 const { View } = require("../../view/view");
 
-class ChoiceNicknameController {
+class RegisterController {
   #userServices;
   #postServices;
   #commentServices;
@@ -12,11 +11,7 @@ class ChoiceNicknameController {
     this.#commentServices = CommentServices;
     this.#view = new View(UserServices, PostServices, CommentServices);
   }
-  /**
-   *
-   * @param {Context} ctx
-   * @returns {void}
-   */
+
   async firstChoiceNickname(ctx) {
     console.log(ctx.message.text);
     const nickname = await this.#userServices.getUserByNickName(
@@ -32,11 +27,32 @@ class ChoiceNicknameController {
         telegramId: ctx.from.id,
       });
       console.log("newUser: ", newUser);
+      this.#view.firstChoiceAgeView(ctx);
+    }
+  }
+
+  async firstChoiceAge(ctx) {
+    await this.#userServices.updateUser(ctx.from.id, {
+      age: parseInt(ctx.message.text),
+    });
+    this.#view.firstChoiceSexView(ctx);
+  }
+
+  async firstChoiceSex(ctx) {
+    if (
+      ctx.message.text !==
+      (ctx.i18n.t("buttons.men") || ctx.i18n.t("buttons.women"))
+    ) {
+      this.#view.firstChoiceSexView(ctx);
+    } else {
+      await this.#userServices.updateUser(ctx.from.id, {
+        sex: ctx.message.text,
+      });
       this.#view.mainMenu(ctx);
     }
   }
 }
 
 module.exports = {
-  ChoiceNicknameController,
+  RegisterController,
 };

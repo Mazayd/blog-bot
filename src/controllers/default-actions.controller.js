@@ -1,5 +1,4 @@
 const UserServices = require("blog-api-lib/services/UserServices");
-const ChoiceNicknameController = require("./choice-nickname.controller");
 const { View } = require("../../view/view");
 class DefaultActionController {
   #userServices;
@@ -17,7 +16,16 @@ class DefaultActionController {
     const user = await this.#userServices.getUserByTgId(ctx.from.id);
     console.log("user: ", user);
     if (!user) {
-      this.#view.firstChoiseNicknameView(ctx);
+      this.#view.firstChoiceNicknameView(ctx);
+    } else {
+      const userData = ctx.i18n
+        .t("phrases.userData")
+        .replace("$telegramId", user.telegramId)
+        .replace("$userName", user.name)
+        .replace("$userNickname", user, nickName);
+      if (!user.age) {
+        userData.replace("$userAge", "");
+      }
     }
   }
 }

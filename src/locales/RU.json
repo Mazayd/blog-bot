@@ -1,8 +1,19 @@
 {
   "phrases": {
-    "firstChoiseNickname": "Введите свой никнейм",
+    "firstChoiceNickname": "Введите свой никнейм",
     "busyNickname": "Никнейм занят",
-    "mainMenu": "Вы в главном меню"
+    "firstChoiceAge": "Введите ваш возраст",
+    "firstChoiceSex": "Выберете свой пол",
+    "mainMenu": "Вы в главном меню",
+    "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n"
   },
-  "buttons": {}
+  "buttons": {
+    "userSetting": "Настройки аккаунта",
+    "userName": "Изменить имя",
+    "userSex": "Изменить пол",
+    "men": "Мужчина",
+    "women": "Женщина",
+    "userAge": "Изменить возраст",
+    "userNickname": "Изменить никнейм"
+  }
 }

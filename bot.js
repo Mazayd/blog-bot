@@ -7,7 +7,7 @@ const {
   DefaultActionController,
 } = require("./src/controllers/default-actions.controller");
 const {
-  ChoiceNicknameController,
+  RegisterController,
 } = require("./src/controllers/choice-nickname.controller");
 
 const i18n = new I18n({
@@ -32,7 +32,7 @@ dotenv.config();
     PostServices,
     CommentServices
   );
-  const choiceNicknameController = new ChoiceNicknameController(
+  const registerController = new RegisterController(
     UserServices,
     PostServices,
     CommentServices
@@ -57,6 +57,10 @@ dotenv.config();
 
   const firstChoiceNickname = new BaseScene("firstChoiceNickname");
   stage.register(firstChoiceNickname);
+  const firstChoiceAge = new BaseScene("firstChoiceAge");
+  stage.register(firstChoiceAge);
+  const firstChoiceSex = new BaseScene("firstChoiceSex");
+  stage.register(firstChoiceSex);
 
   bot.use(stage.middleware());
 
@@ -68,7 +72,15 @@ dotenv.config();
 
   firstChoiceNickname.on(
     "text",
-    choiceNicknameController.firstChoiceNickname.bind(choiceNicknameController)
+    registerController.firstChoiceNickname.bind(registerController)
+  );
+  firstChoiceAge.on(
+    "text",
+    registerController.firstChoiceAge.bind(registerController)
+  );
+  firstChoiceSex.on(
+    "text",
+    registerController.firstChoiceSex.bind(registerController)
   );
 
   bot.launch();
