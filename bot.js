@@ -137,6 +137,10 @@ dotenv.config();
     "text",
     userSettingController.userSettingNickname.bind(userSettingController)
   );
+  userSettingAge.on(
+    "text",
+    userSettingController.userSettingAge.bind(userSettingController)
+  );
 
   bot.launch();
 

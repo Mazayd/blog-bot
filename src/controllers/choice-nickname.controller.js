@@ -1,4 +1,4 @@
-const { View } = require("../../view/view");
+const { View } = require("../view/view");
 
 class RegisterController {
   #userServices;

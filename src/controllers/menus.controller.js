@@ -1,4 +1,4 @@
-const { View } = require("../../view/view");
+const { View } = require("../view/view");
 const { Keyboards } = require("../keyboards/keyboard");
 
 class MenusController {

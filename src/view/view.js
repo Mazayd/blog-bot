@@ -1,4 +1,4 @@
-const { Keyboards } = require("../src/keyboards/keyboard");
+const { Keyboards } = require("../keyboards/keyboard");
 
 class View {
   #userServices;
@@ -92,6 +92,28 @@ class View {
   async newNickname(ctx, nickname) {
     ctx.reply(
       ctx.i18n.t("phrases.newUserNickname").replace("$userNickname", nickname),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+  }
+
+  async userSettingAge(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.userSettingAge"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("userSettingAge");
+  }
+
+  async enterNumber(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.enterNumber"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+  }
+
+  async newAge(ctx, age) {
+    ctx.reply(
+      ctx.i18n.t("phrases.newUserAge").replace("$userAge", age),
       this.#keyboards.backAndMainMenu(ctx)
     );
   }

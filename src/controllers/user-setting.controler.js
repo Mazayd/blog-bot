@@ -1,4 +1,4 @@
-const { View } = require("../../view/view");
+const { View } = require("../view/view");
 const { Keyboards } = require("../keyboards/keyboard");
 
 class UserSettingController {
@@ -22,6 +22,8 @@ class UserSettingController {
       this.#view.userSettingName(ctx);
     } else if (ctx.message.text === ctx.i18n.t("buttons.userNickname")) {
       this.#view.userSettingNickname(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.userAge")) {
+      this.#view.userSettingAge(ctx);
     } else {
       this.#view.userSetting(ctx);
     }
@@ -54,6 +56,23 @@ class UserSettingController {
         nickName: ctx.message.text,
       });
       this.#view.newNickname(ctx, newNickname.nickName);
+    }
+  }
+
+  async userSettingAge(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.back")) {
+      this.#view.userSetting(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else {
+      const age = parseInt(ctx.message.text);
+      if (!age) {
+        return this.#view.enterNumber(ctx);
+      }
+      const newAge = await this.#userServices.updateUser(ctx.from.id, {
+        age: age,
+      });
+      this.#view.newAge(ctx, newAge.age);
     }
   }
 }

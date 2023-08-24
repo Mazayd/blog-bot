@@ -1,5 +1,5 @@
 const UserServices = require("blog-api-lib/services/UserServices");
-const { View } = require("../../view/view");
+const { View } = require("../view/view");
 const { Keyboards } = require("../keyboards/keyboard");
 class DefaultActionController {
   #userServices;
