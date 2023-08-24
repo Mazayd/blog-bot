@@ -125,21 +125,56 @@ dotenv.config();
   );
   mainMenu.on("text", menusController.mainMenu.bind(menusController));
 
+  userSetting.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  userSetting.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
   userSetting.on(
     "text",
     userSettingController.userSetting.bind(userSettingController)
+  );
+  userSettingName.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  userSettingName.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
   );
   userSettingName.on(
     "text",
     userSettingController.userSettingName.bind(userSettingController)
   );
+  userSettingNickname.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  userSettingNickname.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
   userSettingNickname.on(
     "text",
     userSettingController.userSettingNickname.bind(userSettingController)
   );
+  userSettingAge.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  userSettingAge.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
   userSettingAge.on(
     "text",
     userSettingController.userSettingAge.bind(userSettingController)
+  );
+  userSettingSex.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  userSettingSex.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
   );
   userSettingSex.on(
     "text",
