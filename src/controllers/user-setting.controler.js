@@ -6,13 +6,13 @@ class UserSettingController {
   #postServices;
   #commentServices;
   #view;
-  #keyboard;
+  #keyboards;
   constructor(UserServices, PostServices, CommentServices) {
     this.#userServices = UserServices;
     this.#postServices = PostServices;
     this.#commentServices = CommentServices;
     this.#view = new View(UserServices, PostServices, CommentServices);
-    this.#keyboard = new Keyboards();
+    this.#keyboards = new Keyboards();
   }
 
   async userSetting(ctx) {
@@ -20,6 +20,8 @@ class UserSettingController {
       this.#view.mainMenu(ctx);
     } else if (ctx.message.text === ctx.i18n.t("buttons.userName")) {
       this.#view.userSettingName(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.userNickname")) {
+      this.#view.userSettingNickname(ctx);
     } else {
       this.#view.userSetting(ctx);
     }
@@ -34,10 +36,24 @@ class UserSettingController {
       const user = await this.#userServices.updateUser(ctx.from.id, {
         name: ctx.message.text,
       });
-      ctx.reply(
-        ctx.i18n.t("phrases.newUserName").replace("$userName", user.name),
-        this.#keyboard.backAndMainMenu(ctx)
-      );
+      this.#view.newUserName(ctx, user.name);
+    }
+  }
+
+  async userSettingNickname(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.back")) {
+      this.#view.userSetting(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else {
+      const user = await this.#userServices.getUserByNickName(ctx.message.text);
+      if (user) {
+        return this.#view.nicknameTaken(ctx);
+      }
+      const newNickname = await this.#userServices.updateUser(ctx.from.id, {
+        nickName: ctx.message.text,
+      });
+      this.#view.newNickname(ctx, newNickname.nickName);
     }
   }
 }

@@ -66,6 +66,35 @@ class View {
     );
     ctx.scene.enter("userSettingName");
   }
+
+  async newUserName(ctx, name) {
+    ctx.reply(
+      ctx.i18n.t("phrases.newUserName").replace("$userName", name),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+  }
+
+  async userSettingNickname(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.userSettingNickname"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("userSettingNickname");
+  }
+
+  async nicknameTaken(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.busyNickname"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+  }
+
+  async newNickname(ctx, nickname) {
+    ctx.reply(
+      ctx.i18n.t("phrases.newUserNickname").replace("$userNickname", nickname),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+  }
 }
 
 module.exports = {
