@@ -1,18 +1,20 @@
 {
   "phrases": {
-    "firstChoiceNickname": "Введите свой никнейм",
-    "busyNickname": "Никнейм занят",
-    "firstChoiceAge": "Введите ваш возраст",
-    "firstChoiceSex": "Выберете свой пол",
-    "mainMenu": "Вы в главном меню",
-    "noSceneMessage": "Похоже меня перезагрузили, вы в главном меню",
-    "help": "Список команд:\n\n/user_setting - Настройки пользователя",
+    "firstChoiceNickname": "Введите свой никнейм.",
+    "busyNickname": "Никнейм занят.",
+    "firstChoiceAge": "Введите ваш возраст.",
+    "firstChoiceSex": "Выберете свой пол.",
+    "mainMenu": "Вы в главном меню.",
+    "noSceneMessage": "Похоже меня перезагрузили, вы в главном меню.",
+    "help": "Список команд:\n\n/user_setting - Настройки пользователя.",
     "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n",
-    "userSetting": "Выберете параметр который хочете изменить",
-    "userSettingName": "Напишите имя которое вы хотите установить",
-    "newUserName": "Вы изменили имя на - $userName",
-    "newUserNickname": "Вы изменили ник на - $userNickname",
-    "userSettingNickname": "Напишите ник который вы хотите установить"
+    "userSetting": "Выберете параметр который хочете изменить.",
+    "userSettingName": "Напишите имя которое вы хотите установить.",
+    "newUserName": "Вы изменили свое имя\n\nВаше новое имя - $userName.",
+    "newUserNickname": "Вы изменили свой ник\n\nВаш новый ник - $userNickname.",
+    "userSettingNickname": "Напишите ник который вы хотите установить.",
+    "enterNumber": "Введите число, пожалуйста.",
+    "newUserAge": "Вы изменили свой возраст\n\nВаш новый возраст: $userAge."
   },
   "buttons": {
     "back": "Назад",
