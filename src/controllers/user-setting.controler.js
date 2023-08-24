@@ -31,10 +31,13 @@ class UserSettingController {
     } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
       this.#view.mainMenu(ctx);
     } else {
-      await this.#userServices.updateUser(ctx.from.id, {
+      const user = await this.#userServices.updateUser(ctx.from.id, {
         name: ctx.message.text,
       });
-      this.#view.mainMenu(ctx);
+      ctx.reply(
+        ctx.i18n.t("phrases.newUserName").replace("$userName", user.name),
+        this.#keyboard.backAndMainMenu(ctx)
+      );
     }
   }
 }
