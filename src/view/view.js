@@ -117,6 +117,18 @@ class View {
       this.#keyboards.backAndMainMenu(ctx)
     );
   }
+
+  async userSettingSex(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.userSettingSex"),
+      this.#keyboards.userSettingSex(ctx)
+    );
+    ctx.scene.enter("userSettingSex");
+  }
+
+  async newSex(ctx, sex) {
+    ctx.reply(ctx.i18n.t("phrases.newUserSex").replace("$userSex", sex));
+  }
 }
 
 module.exports = {

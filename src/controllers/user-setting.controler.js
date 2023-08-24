@@ -24,6 +24,8 @@ class UserSettingController {
       this.#view.userSettingNickname(ctx);
     } else if (ctx.message.text === ctx.i18n.t("buttons.userAge")) {
       this.#view.userSettingAge(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.userSex")) {
+      this.#view.userSettingSex(ctx);
     } else {
       this.#view.userSetting(ctx);
     }
@@ -73,6 +75,22 @@ class UserSettingController {
         age: age,
       });
       this.#view.newAge(ctx, newAge.age);
+    }
+  }
+
+  async userSettingSex(ctx) {
+    const sex = new Set(["Мужчина", "Женщина"]);
+    if (ctx.message.text === ctx.i18n.t("buttons.back")) {
+      this.#view.userSetting(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else if (sex.has(ctx.message.text)) {
+      const user = await this.#userServices.updateUser(ctx.from.id, {
+        sex: ctx.message.text,
+      });
+      this.#view.newSex(ctx, ctx.message.text);
+    } else {
+      this.#view.userSettingSex(ctx);
     }
   }
 }

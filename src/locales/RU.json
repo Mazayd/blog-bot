@@ -15,7 +15,9 @@
     "userSettingNickname": "Напишите ник который вы хотите установить.",
     "enterNumber": "Введите число, пожалуйста.",
     "newUserAge": "Вы изменили свой возраст\n\nВаш новый возраст: $userAge.",
-    "userSettingAge": "Введите ваш возраст."
+    "userSettingAge": "Введите ваш возраст.",
+    "userSettingSex": "Выберете свой новый пол.",
+    "newUserSex": "Вы изменили свой пол\n\nВаш новый пол: $userSex"
   },
   "buttons": {
     "back": "Назад",

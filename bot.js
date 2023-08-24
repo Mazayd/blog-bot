@@ -141,6 +141,10 @@ dotenv.config();
     "text",
     userSettingController.userSettingAge.bind(userSettingController)
   );
+  userSettingSex.on(
+    "text",
+    userSettingController.userSettingSex.bind(userSettingController)
+  );
 
   bot.launch();
 

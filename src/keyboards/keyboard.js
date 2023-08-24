@@ -33,6 +33,15 @@ class Keyboards {
       .resize()
       .extra();
   }
+
+  userSettingSex(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
+      [ctx.i18n.t("buttons.men"), ctx.i18n.t("buttons.women")],
+    ])
+      .resize()
+      .extra();
+  }
 }
 
 module.exports = {
