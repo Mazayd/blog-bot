@@ -92,6 +92,15 @@ dotenv.config();
   bot.catch(console.log);
 
   bot.start(defaultActionController.startReply.bind(defaultActionController));
+  bot.help(menusController.helpView.bind(menusController));
+  bot.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  bot.on(
+    "text",
+    defaultActionController.noSceneReply.bind(defaultActionController)
+  );
 
   firstChoiceNickname.on(
     "text",
@@ -106,6 +115,14 @@ dotenv.config();
     registerController.firstChoiceSex.bind(registerController)
   );
 
+  mainMenu.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  mainMenu.help(menusController.helpView.bind(menusController));
+  mainMenu.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
   mainMenu.on("text", menusController.mainMenu.bind(menusController));
 
   userSetting.on(

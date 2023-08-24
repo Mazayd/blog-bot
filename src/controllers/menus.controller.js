@@ -22,6 +22,15 @@ class MenusController {
       this.#view.mainMenu(ctx);
     }
   }
+
+  async helpView(ctx) {
+    ctx.reply(ctx.i18n.t("phrases.help"), this.#keyboard.mainMenu(ctx));
+    ctx.scene.enter("mainMenu");
+  }
+
+  async userSettingView(ctx) {
+    this.#view.userSetting(ctx);
+  }
 }
 
 module.exports = {

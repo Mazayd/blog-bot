@@ -17,23 +17,41 @@ class DefaultActionController {
 
   async startReply(ctx) {
     const user = await this.#userServices.getUserByTgId(ctx.from.id);
-    console.log("user: ", user);
     if (!user) {
       this.#view.firstChoiceNicknameView(ctx);
     } else {
-      const userData = ctx.i18n
-        .t("phrases.userData")
-        .replace("$telegramId", user.telegramId)
-        .replace("$userName", user.name)
-        .replace("$userNickname", user.nickName)
-        .replace("$userAge", user.age)
-        .replace("$userSex", user.sex);
+      const userData = await this.userData(ctx, user);
       ctx.reply(
         `${ctx.i18n.t("phrases.mainMenu")}\n\n${userData}`,
         this.#keyboard.mainMenu(ctx)
       );
       ctx.scene.enter("mainMenu");
     }
+  }
+
+  async noSceneReply(ctx) {
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+    if (!user) {
+      this.#view.firstChoiceNicknameView(ctx);
+    } else {
+      const userData = await this.userData(ctx, user);
+      ctx.reply(
+        `${ctx.i18n.t("phrases.noSceneMessage")}\n\n${userData}`,
+        this.#keyboard.mainMenu(ctx)
+      );
+      ctx.scene.enter("mainMenu");
+    }
+  }
+
+  async userData(ctx, user) {
+    const userData = ctx.i18n
+      .t("phrases.userData")
+      .replace("$telegramId", user.telegramId)
+      .replace("$userName", user.name)
+      .replace("$userNickname", user.nickName)
+      .replace("$userAge", user.age)
+      .replace("$userSex", user.sex);
+    return userData;
   }
 }
 

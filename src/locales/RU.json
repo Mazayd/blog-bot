@@ -5,6 +5,8 @@
     "firstChoiceAge": "Введите ваш возраст",
     "firstChoiceSex": "Выберете свой пол",
     "mainMenu": "Вы в главном меню",
+    "noSceneMessage": "Похоже меня перезагрузили, вы в главном меню",
+    "help": "Список команд:\n\n/user_setting - Настройки пользователя",
     "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n",
     "userSetting": "Выберете параметр который хочете изменить",
     "userSettingName": "Напишите имя которое вы хотите установить"
