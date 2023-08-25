@@ -59,6 +59,24 @@ class Keyboards {
       .resize()
       .extra();
   }
+
+  getMyPost(ctx) {
+    return Markup.keyboard([[ctx.i18n.t("buttons.back")]])
+      .resize()
+      .extra();
+  }
+
+  myPostInline(ctx) {
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          { text: "⏪", callback_data: parseInt(ctx.session.iterator) - 1 },
+          { text: "⏩", callback_data: parseInt(ctx.session.iterator) + 1 },
+        ],
+      ],
+    };
+    return replyMarkup;
+  }
 }
 
 module.exports = {

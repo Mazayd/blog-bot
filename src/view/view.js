@@ -173,6 +173,56 @@ class View {
     ctx.reply(message, this.#keyboards.userPost(ctx));
     ctx.scene.enter("userPost");
   }
+
+  async getMyPost(ctx, post) {
+    let message = ctx.i18n
+      .t("phrases.post")
+      .replace("$content", post.content)
+      .replace(
+        "$dateCreate",
+        new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      );
+    if (post.hashtags.length === 0) {
+      message = message.replace("$hashtags", "Отсутствуют");
+    } else {
+      message = message.replace("$hashtags", `${post.hashtags.join(", ")}`);
+    }
+    ctx.reply(ctx.i18n.t("phrases.getPost"), this.#keyboards.getMyPost(ctx));
+    ctx.reply(message, {
+      reply_markup: this.#keyboards.myPostInline(ctx),
+    });
+    ctx.scene.enter("getMyPost");
+  }
+
+  changeOfPost(ctx, post) {
+    let message = ctx.i18n
+      .t("phrases.post")
+      .replace("$content", post.content)
+      .replace(
+        "$dateCreate",
+        new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      );
+    if (post.hashtags.length === 0) {
+      message = message.replace("$hashtags", "Отсутствуют");
+    } else {
+      message = message.replace("$hashtags", `${post.hashtags.join(", ")}`);
+    }
+    ctx.editMessageText(message, {
+      reply_markup: this.#keyboards.myPostInline(ctx),
+    });
+  }
+
+  notPost(ctx) {
+    ctx.reply(ctx.i18n.t("phrases.notPost"));
+  }
 }
 
 module.exports = {

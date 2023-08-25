@@ -101,6 +101,8 @@ dotenv.config();
   stage.register(newPost);
   const choosingHashtag = new BaseScene("choosingHashtag");
   stage.register(choosingHashtag);
+  const getMyPost = new BaseScene("getMyPost");
+  stage.register(getMyPost);
 
   bot.use(stage.middleware());
 
@@ -211,7 +213,11 @@ dotenv.config();
     "text",
     userPostController.choosingHashtag.bind(userPostController)
   );
-
+  getMyPost.on("text", userPostController.getMyPost.bind(userPostController));
+  getMyPost.on(
+    "callback_query",
+    userPostController.getMyPostInline.bind(userPostController)
+  );
   bot.launch();
 
   return "Sam";
