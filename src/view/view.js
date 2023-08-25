@@ -37,6 +37,7 @@ class View {
 
   async mainMenu(ctx) {
     const user = await this.#userServices.getUserByTgId(ctx.from.id);
+    ctx.session.user = user;
     const userData = ctx.i18n
       .t("phrases.userData")
       .replace("$telegramId", user.telegramId)
@@ -128,6 +129,49 @@ class View {
 
   async newSex(ctx, sex) {
     ctx.reply(ctx.i18n.t("phrases.newUserSex").replace("$userSex", sex));
+  }
+
+  async userPost(ctx) {
+    ctx.reply(ctx.i18n.t("phrases.userPost"), this.#keyboards.userPost(ctx));
+    ctx.scene.enter("userPost");
+  }
+
+  async newPost(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.newPost"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("newPost");
+  }
+
+  async choosingHashtag(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.choosingHashtag"),
+      this.#keyboards.choosingHashtag(ctx)
+    );
+    ctx.scene.enter("choosingHashtag");
+  }
+
+  async postCreated(ctx, post) {
+    let message = ctx.i18n
+      .t("phrases.postCreated")
+      .replace("$content", post.content)
+      .replace(
+        "$dateCreate",
+        new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      );
+
+    if (post.hashtags.length === 0) {
+      message = message.replace("$hashtags", "Отсутствуют");
+    } else {
+      message = message.replace("$hashtags", post.hashtags[0]);
+    }
+    ctx.reply(message, this.#keyboards.userPost(ctx));
+    ctx.scene.enter("userPost");
   }
 }
 

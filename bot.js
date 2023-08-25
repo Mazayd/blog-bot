@@ -13,6 +13,9 @@ const { MenusController } = require("./src/controllers/menus.controller");
 const {
   UserSettingController,
 } = require("./src/controllers/user-setting.controler");
+const {
+  UserPostController,
+} = require("./src/controllers/user-post.controller");
 
 const i18n = new I18n({
   directory: path.join(__dirname, "src/locales"),
@@ -47,6 +50,11 @@ dotenv.config();
     CommentServices
   );
   const userSettingController = new UserSettingController(
+    UserServices,
+    PostServices,
+    CommentServices
+  );
+  const userPostController = new UserPostController(
     UserServices,
     PostServices,
     CommentServices
@@ -86,6 +94,13 @@ dotenv.config();
   stage.register(userSettingAge);
   const userSettingSex = new BaseScene("userSettingSex");
   stage.register(userSettingSex);
+
+  const userPost = new BaseScene("userPost");
+  stage.register(userPost);
+  const newPost = new BaseScene("newPost");
+  stage.register(newPost);
+  const choosingHashtag = new BaseScene("choosingHashtag");
+  stage.register(choosingHashtag);
 
   bot.use(stage.middleware());
 
@@ -179,6 +194,22 @@ dotenv.config();
   userSettingSex.on(
     "text",
     userSettingController.userSettingSex.bind(userSettingController)
+  );
+
+  userPost.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  userPost.on("text", userPostController.userPost.bind(userPostController));
+  newPost.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  newPost.on("text", userPostController.newPost.bind(userPostController));
+  choosingHashtag.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  choosingHashtag.on(
+    "text",
+    userPostController.choosingHashtag.bind(userPostController)
   );
 
   bot.launch();

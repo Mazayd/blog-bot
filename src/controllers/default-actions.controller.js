@@ -20,6 +20,8 @@ class DefaultActionController {
     if (!user) {
       this.#view.firstChoiceNicknameView(ctx);
     } else {
+      ctx.session.user = user;
+      console.log("ctx.session.user: ", ctx.session.user);
       const userData = await this.userData(ctx, user);
       ctx.reply(
         `${ctx.i18n.t("phrases.mainMenu")}\n\n${userData}`,
@@ -34,6 +36,7 @@ class DefaultActionController {
     if (!user) {
       this.#view.firstChoiceNicknameView(ctx);
     } else {
+      ctx.session.user = user;
       const userData = await this.userData(ctx, user);
       ctx.reply(
         `${ctx.i18n.t("phrases.noSceneMessage")}\n\n${userData}`,

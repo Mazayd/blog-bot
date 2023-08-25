@@ -3,7 +3,9 @@ const i18n = require("i18n");
 
 class Keyboards {
   mainMenu(ctx) {
-    return Markup.keyboard([[ctx.i18n.t("buttons.userSetting")]])
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.userSetting"), ctx.i18n.t("buttons.userPost")],
+    ])
       .resize()
       .extra();
   }
@@ -39,6 +41,21 @@ class Keyboards {
       [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
       [ctx.i18n.t("buttons.men"), ctx.i18n.t("buttons.women")],
     ])
+      .resize()
+      .extra();
+  }
+
+  userPost(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back")],
+      [ctx.i18n.t("buttons.newPost"), ctx.i18n.t("buttons.getPost")],
+    ])
+      .resize()
+      .extra();
+  }
+
+  choosingHashtag(ctx) {
+    return Markup.keyboard([[ctx.i18n.t("buttons.skip")]])
       .resize()
       .extra();
   }

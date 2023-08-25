@@ -18,6 +18,8 @@ class MenusController {
   async mainMenu(ctx) {
     if (ctx.message.text === ctx.i18n.t("buttons.userSetting")) {
       this.#view.userSetting(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.userPost")) {
+      this.#view.userPost(ctx);
     } else {
       this.#view.mainMenu(ctx);
     }
