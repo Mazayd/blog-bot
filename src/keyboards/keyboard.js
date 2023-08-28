@@ -63,7 +63,7 @@ class Keyboards {
   getMyPost(ctx) {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.back")],
-      [ctx.i18n.t("buttons.getComments")],
+      [ctx.i18n.t("buttons.getComments"), ctx.i18n.t("buttons.updatePost")],
     ])
       .resize()
       .extra();

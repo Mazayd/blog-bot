@@ -78,6 +78,7 @@ class UserPostController {
       const author = await this.#userServices.getUserById(comment.user);
       this.#view.getComments(ctx, comment, author);
     } else if (ctx.message.text === ctx.i18n.t("buttons.updatePost")) {
+      this.#view.updatePost(ctx);
     }
   }
 
@@ -128,6 +129,26 @@ class UserPostController {
     );
     ctx.session.post = post;
     this.#view.changeOfPost(ctx, post);
+  }
+
+  async updatePost(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.back")) {
+      const post = await this.#postServices.getPostById(
+        ctx.session.user.posts[ctx.session.post_iterator]
+      );
+      this.#view.getMyPost(ctx, post);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else {
+      const post = await this.#postServices.updatePost(
+        ctx.session.user.posts[ctx.session.post_iterator],
+        ctx.from.id,
+        {
+          content: ctx.message.text,
+        }
+      );
+      this.#view.getMyPost(ctx, post);
+    }
   }
 }
 

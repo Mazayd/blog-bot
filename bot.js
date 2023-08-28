@@ -105,6 +105,8 @@ dotenv.config();
   stage.register(getMyPost);
   const getUserPostComment = new BaseScene("getUserPostComment");
   stage.register(getUserPostComment);
+  const updatePost = new BaseScene("updatePost");
+  stage.register(updatePost);
 
   bot.use(stage.middleware());
 
@@ -228,6 +230,7 @@ dotenv.config();
     "callback_query",
     userPostController.inlineComment.bind(userPostController)
   );
+  updatePost.on("text", userPostController.updatePost.bind(userPostController));
   bot.launch();
 
   return "Sam";

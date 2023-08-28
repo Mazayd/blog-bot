@@ -297,6 +297,14 @@ class View {
   notComment(ctx) {
     ctx.reply(ctx.i18n.t("phrases.notComment"));
   }
+
+  updatePost(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.updatePost"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("updatePost");
+  }
 }
 
 module.exports = {
