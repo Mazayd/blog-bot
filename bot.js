@@ -103,6 +103,8 @@ dotenv.config();
   stage.register(choosingHashtag);
   const getMyPost = new BaseScene("getMyPost");
   stage.register(getMyPost);
+  const getUserPostComment = new BaseScene("getUserPostComment");
+  stage.register(getUserPostComment);
 
   bot.use(stage.middleware());
 
@@ -217,6 +219,14 @@ dotenv.config();
   getMyPost.on(
     "callback_query",
     userPostController.getMyPostInline.bind(userPostController)
+  );
+  getUserPostComment.on(
+    "text",
+    userPostController.getUserPostComment.bind(userPostController)
+  );
+  getUserPostComment.on(
+    "callback_query",
+    userPostController.inlineComment.bind(userPostController)
   );
   bot.launch();
 

@@ -192,9 +192,23 @@ class View {
       message = message.replace("$hashtags", `${post.hashtags.join(", ")}`);
     }
     ctx.reply(ctx.i18n.t("phrases.getPost"), this.#keyboards.getMyPost(ctx));
-    ctx.reply(message, {
-      reply_markup: this.#keyboards.myPostInline(ctx),
-    });
+    if (ctx.session.user.posts.length > 1) {
+      ctx
+        .reply(message, {
+          reply_markup: this.#keyboards.myPostInline(ctx),
+        })
+        .then((sentMessage) => {
+          const message_id = sentMessage.message_id;
+          ctx.deleteMessage(ctx.session.message_id);
+          ctx.session.message_id = message_id;
+        });
+    } else {
+      ctx.reply(message).then((sentMessage) => {
+        const message_id = sentMessage.message_id;
+        ctx.deleteMessage(ctx.session.message_id);
+        ctx.session.message_id = message_id;
+      });
+    }
     ctx.scene.enter("getMyPost");
   }
 
@@ -222,6 +236,66 @@ class View {
 
   notPost(ctx) {
     ctx.reply(ctx.i18n.t("phrases.notPost"));
+  }
+
+  getComments(ctx, comment, author) {
+    const message = ctx.i18n
+      .t("phrases.comment")
+      .replace("$content", comment.content)
+      .replace("$author", author.nickName)
+      .replace(
+        "$dateCreate",
+        new Date(comment.dateOfCreate).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      );
+
+    if (ctx.session.post.comments.length > 1) {
+      ctx.reply(
+        ctx.i18n.t("phrases.getComment"),
+        this.#keyboards.getMyComment(ctx)
+      );
+      ctx
+        .reply(message, {
+          reply_markup: this.#keyboards.myCommentInline(ctx),
+        })
+        .then((sentMessage) => {
+          ctx.deleteMessage(ctx.session.message_id);
+          ctx.session.message_id = sentMessage.message_id;
+        });
+    } else {
+      ctx.reply(message).then((sentMessage) => {
+        const message_id = sentMessage.message_id;
+        ctx.deleteMessage(ctx.session.message_id);
+        ctx.session.message_id = message_id;
+      });
+    }
+
+    ctx.scene.enter("getUserPostComment");
+  }
+
+  changeOfComment(ctx, comment, author) {
+    const message = ctx.i18n
+      .t("phrases.comment")
+      .replace("$content", comment.content)
+      .replace("$author", author.nickName)
+      .replace(
+        "$dateCreate",
+        new Date(comment.dateOfCreate).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      );
+    ctx.editMessageText(message, {
+      reply_markup: this.#keyboards.myCommentInline(ctx),
+    });
+  }
+
+  notComment(ctx) {
+    ctx.reply(ctx.i18n.t("phrases.notComment"));
   }
 }
 

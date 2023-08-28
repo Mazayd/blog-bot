@@ -61,6 +61,15 @@ class Keyboards {
   }
 
   getMyPost(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back")],
+      [ctx.i18n.t("buttons.getComments")],
+    ])
+      .resize()
+      .extra();
+  }
+
+  getMyComment(ctx) {
     return Markup.keyboard([[ctx.i18n.t("buttons.back")]])
       .resize()
       .extra();
@@ -70,14 +79,44 @@ class Keyboards {
     const replyMarkup = {
       inline_keyboard: [
         [
-          { text: "⏪", callback_data: parseInt(ctx.session.iterator) - 1 },
           {
-            text: `${parseInt(ctx.session.iterator) + 1} c ${
+            text: "⏪",
+            callback_data: parseInt(ctx.session.post_iterator) - 1,
+          },
+          {
+            text: `${parseInt(ctx.session.post_iterator) + 1} c ${
               ctx.session.user.posts.length
             }`,
-            callback_data: parseInt(ctx.session.iterator),
+            callback_data: parseInt(ctx.session.post_iterator),
           },
-          { text: "⏩", callback_data: parseInt(ctx.session.iterator) + 1 },
+          {
+            text: "⏩",
+            callback_data: parseInt(ctx.session.post_iterator) + 1,
+          },
+        ],
+      ],
+    };
+    return replyMarkup;
+  }
+
+  myCommentInline(ctx) {
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: "⏪",
+            callback_data: `${parseInt(ctx.session.comment_iterator) - 1}`,
+          },
+          {
+            text: `${parseInt(ctx.session.comment_iterator) + 1} c ${
+              ctx.session.post.comments.length
+            }`,
+            callback_data: `${parseInt(ctx.session.comment_iterator)}`,
+          },
+          {
+            text: "⏩",
+            callback_data: `${parseInt(ctx.session.comment_iterator) + 1}`,
+          },
         ],
       ],
     };
