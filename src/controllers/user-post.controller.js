@@ -64,24 +64,20 @@ class UserPostController {
 
   async getMyPost(cxt) {}
 
-  async getMyPostInline(ctx) {
-    // console.log(ctx.update.callback_query.data);
-    // console.log("ctx.update :>> ", ctx.update);
-    // console.log(ctx.session.user.posts.length);
-    if (parseInt(ctx.update.callback_query.data) < 0) {
+  async getMyPostInline(ctx, bot) {
+    const newIterator = parseInt(ctx.update.callback_query.data);
+    if (newIterator < 0) {
       ctx.session.iterator = ctx.session.user.posts.length - 1;
-    } else if (
-      parseInt(ctx.update.callback_query.data) === ctx.session.user.posts.length
-    ) {
+    } else if (newIterator === ctx.session.user.posts.length) {
       ctx.session.iterator = 0;
+    } else if (newIterator === ctx.session.iterator) {
+      return ctx.answerCbQuery();
     } else {
-      ctx.session.iterator = ctx.update.callback_query.data;
+      ctx.session.iterator = newIterator;
     }
-    console.log(ctx.session.iterator);
     const post = await this.#postServices.getPostById(
       ctx.session.user.posts[ctx.session.iterator]
     );
-
     this.#view.changeOfPost(ctx, post);
   }
 }

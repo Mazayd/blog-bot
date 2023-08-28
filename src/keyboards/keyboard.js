@@ -71,6 +71,12 @@ class Keyboards {
       inline_keyboard: [
         [
           { text: "⏪", callback_data: parseInt(ctx.session.iterator) - 1 },
+          {
+            text: `${parseInt(ctx.session.iterator) + 1} c ${
+              ctx.session.user.posts.length
+            }`,
+            callback_data: parseInt(ctx.session.iterator),
+          },
           { text: "⏩", callback_data: parseInt(ctx.session.iterator) + 1 },
         ],
       ],
