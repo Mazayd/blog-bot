@@ -82,13 +82,13 @@ class Keyboards {
   myPostInline(ctx) {
     const likeInlineKeyboard = {
       text: ctx.session.post.likes.find((item) => item === ctx.session.user._id)
-        ? "🖤"
-        : "❤️",
+        ? "❤️"
+        : "🖤",
       callback_data: ctx.session.post.likes.find(
         (item) => item === ctx.session.user._id
       )
-        ? "🖤"
-        : "❤️",
+        ? "❤️"
+        : "🖤",
     };
 
     const replyMarkup = {
@@ -116,8 +116,21 @@ class Keyboards {
   }
 
   myCommentInline(ctx) {
+    const likeInlineKeyboard = {
+      text: ctx.session.comment.likes.find(
+        (item) => item === ctx.session.user._id
+      )
+        ? "❤️"
+        : "🖤",
+      callback_data: ctx.session.comment.likes.find(
+        (item) => item === ctx.session.user._id
+      )
+        ? "❤️"
+        : "🖤",
+    };
     const replyMarkup = {
       inline_keyboard: [
+        [likeInlineKeyboard],
         [
           {
             text: "⏪",
