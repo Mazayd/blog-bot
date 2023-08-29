@@ -205,11 +205,13 @@ class View {
           ctx.session.message_id = message_id;
         });
     } else {
-      ctx.reply(message).then((sentMessage) => {
-        const message_id = sentMessage.message_id;
-        ctx.deleteMessage(ctx.session.message_id);
-        ctx.session.message_id = message_id;
-      });
+      ctx
+        .reply(message, this.#keyboards.myOnePostInline(ctx))
+        .then((sentMessage) => {
+          const message_id = sentMessage.message_id;
+          ctx.deleteMessage(ctx.session.message_id);
+          ctx.session.message_id = message_id;
+        });
     }
     ctx.scene.enter("getMyPost");
   }
@@ -233,9 +235,15 @@ class View {
     } else {
       message = message.replace("$hashtags", `${post.hashtags.join(", ")}`);
     }
-    ctx.editMessageText(message, {
-      reply_markup: this.#keyboards.myPostInline(ctx),
-    });
+    if (ctx.session.user.posts.length > 1) {
+      ctx.editMessageText(message, {
+        reply_markup: this.#keyboards.myPostInline(ctx),
+      });
+    } else {
+      ctx.editMessageText(message, {
+        reply_markup: this.#keyboards.myOnePostInline(ctx),
+      });
+    }
   }
 
   notPost(ctx) {
@@ -270,11 +278,15 @@ class View {
           ctx.session.message_id = sentMessage.message_id;
         });
     } else {
-      ctx.reply(message).then((sentMessage) => {
-        const message_id = sentMessage.message_id;
-        ctx.deleteMessage(ctx.session.message_id);
-        ctx.session.message_id = message_id;
-      });
+      ctx
+        .reply(message, {
+          reply_markup: this.#keyboards.myOneCommentInline(ctx),
+        })
+        .then((sentMessage) => {
+          const message_id = sentMessage.message_id;
+          ctx.deleteMessage(ctx.session.message_id);
+          ctx.session.message_id = message_id;
+        });
     }
 
     ctx.scene.enter("getUserPostComment");
@@ -294,9 +306,15 @@ class View {
           year: "numeric",
         })
       );
-    ctx.editMessageText(message, {
-      reply_markup: this.#keyboards.myCommentInline(ctx),
-    });
+    if (ctx.session.post.comments.length > 1) {
+      ctx.editMessageText(message, {
+        reply_markup: this.#keyboards.myCommentInline(ctx),
+      });
+    } else {
+      ctx.editMessageText(message, {
+        reply_markup: this.#keyboards.myOneCommentInline(ctx),
+      });
+    }
   }
 
   notComment(ctx) {
