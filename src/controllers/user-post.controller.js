@@ -140,21 +140,33 @@ class UserPostController {
   }
 
   async getMyPostInline(ctx) {
-    const newIterator = parseInt(ctx.update.callback_query.data);
-    if (newIterator < 0) {
-      ctx.session.post_iterator = ctx.session.user.posts.length - 1;
-    } else if (newIterator === ctx.session.user.posts.length) {
-      ctx.session.post_iterator = 0;
-    } else if (newIterator === ctx.session.post_iterator) {
-      return null;
+    if (
+      ctx.update.callback_query.data === "🖤" ||
+      ctx.update.callback_query.data === "❤️"
+    ) {
+      const newPost = await this.#postServices.likePost(
+        ctx.session.post._id,
+        ctx.from.id
+      );
+      ctx.session.post = newPost;
+      this.#view.changeOfPost(ctx, newPost);
     } else {
-      ctx.session.post_iterator = newIterator;
+      const newIterator = parseInt(ctx.update.callback_query.data);
+      if (newIterator < 0) {
+        ctx.session.post_iterator = ctx.session.user.posts.length - 1;
+      } else if (newIterator === ctx.session.user.posts.length) {
+        ctx.session.post_iterator = 0;
+      } else if (newIterator === ctx.session.post_iterator) {
+        return null;
+      } else {
+        ctx.session.post_iterator = newIterator;
+      }
+      const post = await this.#postServices.getPostById(
+        ctx.session.user.posts[ctx.session.post_iterator]
+      );
+      ctx.session.post = post;
+      this.#view.changeOfPost(ctx, post);
     }
-    const post = await this.#postServices.getPostById(
-      ctx.session.user.posts[ctx.session.post_iterator]
-    );
-    ctx.session.post = post;
-    this.#view.changeOfPost(ctx, post);
   }
 
   async updatePost(ctx) {
