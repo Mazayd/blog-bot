@@ -33,7 +33,9 @@
     "successfullyRemoved": "Пост удален!",
     "updateHashtag": "Введите хештеги которые хотите установить за постом. Разделяйте их запятой, например:\n\nкек, чебурек, котик ",
     "successfulyDeleteHashtag": "Хештеги успешно удалены!",
-    "deleteHashtag": "Вы точно хотите удалить хештеги?"
+    "deleteHashtag": "Вы точно хотите удалить хештеги?",
+    "successfulyDeleteComment": "Комментарий удален.",
+    "deleteComment": "Вы точно хотите удалить комментарий?"
   },
   "buttons": {
     "back": "Назад",
@@ -55,6 +57,7 @@
     "yes": "Да",
     "no": "Нет",
     "deleteHashtag": "Удалить хештеги",
-    "updateHashtag": "Изменить хештеги"
+    "updateHashtag": "Изменить хештеги",
+    "deleteComment": "Удалить комментарий"
   }
 }

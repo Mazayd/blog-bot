@@ -74,6 +74,7 @@ class UserPostController {
       if (!comment) {
         return this.#view.notComment(ctx);
       }
+      ctx.session.comment = comment;
       const author = await this.#userServices.getUserById(comment.user);
       this.#view.getComments(ctx, comment, author);
     } else if (ctx.message.text === ctx.i18n.t("buttons.updatePost")) {
@@ -94,6 +95,28 @@ class UserPostController {
       this.#view.getMyPost(ctx, post);
     } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
       this.#view.mainMenu(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.deleteComment")) {
+      this.#view.deleteComment(ctx);
+    }
+  }
+
+  async deleteComment(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.no")) {
+      const author = await this.#userServices.getUserById(
+        ctx.session.comment.user
+      );
+      this.#view.getComments(ctx, ctx.session.comment, author);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.yes")) {
+      await this.#commentServices.deleteComment(
+        ctx.from.id,
+        ctx.session.comment._id
+      );
+      const post = await this.#postServices.getPostById(
+        ctx.session.user.posts[ctx.session.post_iterator]
+      );
+      ctx.session.post = post;
+      ctx.reply(ctx.i18n.t("phrases.successfulyDeleteComment"));
+      this.#view.getMyPost(ctx, post);
     }
   }
 
@@ -108,10 +131,10 @@ class UserPostController {
     } else {
       ctx.session.comment_iterator = newIterator;
     }
-    console.log("ctx.session.post :>> ", ctx.session.comment_iterator);
     const comment = await this.#commentServices.getCommentById(
       ctx.session.post.comments[ctx.session.comment_iterator]
     );
+    ctx.session.comment = comment;
     const author = await this.#userServices.getUserById(comment.user);
     this.#view.changeOfComment(ctx, comment, author);
   }

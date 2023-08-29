@@ -256,12 +256,11 @@ class View {
           year: "numeric",
         })
       );
-
+    ctx.reply(
+      ctx.i18n.t("phrases.getComment"),
+      this.#keyboards.getMyComment(ctx)
+    );
     if (ctx.session.post.comments.length > 1) {
-      ctx.reply(
-        ctx.i18n.t("phrases.getComment"),
-        this.#keyboards.getMyComment(ctx)
-      );
       ctx
         .reply(message, {
           reply_markup: this.#keyboards.myCommentInline(ctx),
@@ -349,6 +348,14 @@ class View {
       this.#keyboards.deletePost(ctx)
     );
     ctx.scene.enter("deleteHashtag");
+  }
+
+  deleteComment(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.deleteComment"),
+      this.#keyboards.deletePost(ctx)
+    );
+    ctx.scene.enter("deleteComment");
   }
 }
 
