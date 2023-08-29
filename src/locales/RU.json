@@ -35,7 +35,9 @@
     "successfulyDeleteHashtag": "Хештеги успешно удалены!",
     "deleteHashtag": "Вы точно хотите удалить хештеги?",
     "successfulyDeleteComment": "Комментарий удален.",
-    "deleteComment": "Вы точно хотите удалить комментарий?"
+    "deleteComment": "Вы точно хотите удалить комментарий?",
+    "writeComment": "Здесь вы можете написать комментарий к посту.",
+    "commentCreated": "Комментарий создан"
   },
   "buttons": {
     "back": "Назад",
@@ -58,6 +60,7 @@
     "no": "Нет",
     "deleteHashtag": "Удалить хештеги",
     "updateHashtag": "Изменить хештеги",
-    "deleteComment": "Удалить комментарий"
+    "deleteComment": "Удалить комментарий",
+    "writeComment": "Написать комментарий"
   }
 }

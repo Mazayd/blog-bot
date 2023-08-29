@@ -375,6 +375,14 @@ class View {
     );
     ctx.scene.enter("deleteComment");
   }
+
+  writeComment(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.writeComment"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("writeComment");
+  }
 }
 
 module.exports = {

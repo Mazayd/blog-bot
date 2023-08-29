@@ -115,6 +115,8 @@ dotenv.config();
   stage.register(deleteHashtag);
   const deleteComment = new BaseScene("deleteComment");
   stage.register(deleteComment);
+  const writeComment = new BaseScene("writeComment");
+  stage.register(writeComment);
 
   bot.use(stage.middleware());
 
@@ -251,6 +253,10 @@ dotenv.config();
   deleteComment.on(
     "text",
     userPostController.deleteComment.bind(userPostController)
+  );
+  writeComment.on(
+    "text",
+    userPostController.writeComment.bind(userPostController)
   );
 
   bot.launch();
