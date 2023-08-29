@@ -216,8 +216,13 @@ dotenv.config();
     defaultActionController.startReply.bind(defaultActionController)
   );
   userPost.on("text", userPostController.userPost.bind(userPostController));
+
   newPost.start(
     defaultActionController.startReply.bind(defaultActionController)
+  );
+  newPost.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
   );
   newPost.on("text", userPostController.newPost.bind(userPostController));
   choosingHashtag.start(
@@ -227,10 +232,68 @@ dotenv.config();
     "text",
     userPostController.choosingHashtag.bind(userPostController)
   );
+
+  getMyPost.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  getMyPost.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
   getMyPost.on("text", userPostController.getMyPost.bind(userPostController));
   getMyPost.on(
     "callback_query",
     userPostController.getMyPostInline.bind(userPostController)
+  );
+
+  updatePost.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  updatePost.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  updatePost.on("text", userPostController.updatePost.bind(userPostController));
+
+  deletePost.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  deletePost.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  deletePost.on("text", userPostController.deletePost.bind(userPostController));
+
+  updateHashtag.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  updateHashtag.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  updateHashtag.on(
+    "text",
+    userPostController.updateHashtag.bind(userPostController)
+  );
+
+  deleteHashtag.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  deleteHashtag.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  deleteHashtag.on(
+    "text",
+    userPostController.deleteHashtag.bind(userPostController)
+  );
+
+  getUserPostComment.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  getUserPostComment.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
   );
   getUserPostComment.on(
     "text",
@@ -240,19 +303,25 @@ dotenv.config();
     "callback_query",
     userPostController.inlineComment.bind(userPostController)
   );
-  updatePost.on("text", userPostController.updatePost.bind(userPostController));
-  deletePost.on("text", userPostController.deletePost.bind(userPostController));
-  updateHashtag.on(
-    "text",
-    userPostController.updateHashtag.bind(userPostController)
+
+  deleteComment.start(
+    defaultActionController.startReply.bind(defaultActionController)
   );
-  deleteHashtag.on(
-    "text",
-    userPostController.deleteHashtag.bind(userPostController)
+  deleteComment.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
   );
   deleteComment.on(
     "text",
     userPostController.deleteComment.bind(userPostController)
+  );
+
+  writeComment.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  writeComment.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
   );
   writeComment.on(
     "text",
