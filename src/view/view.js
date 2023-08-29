@@ -321,6 +321,29 @@ class View {
     );
     ctx.scene.enter("userPost");
   }
+
+  updateHashtag(ctx) {
+    if (ctx.session.post.hashtags.length === 0) {
+      ctx.reply(
+        ctx.i18n.t("phrases.updateHashtag"),
+        this.#keyboards.updateHashtagNoHashtag(ctx)
+      );
+    } else {
+      ctx.reply(
+        ctx.i18n.t("phrases.updateHashtag"),
+        this.#keyboards.updateHashtag(ctx)
+      );
+    }
+    ctx.scene.enter("updateHashtag");
+  }
+
+  deleteHashtag(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.deleteHashtag"),
+      this.#keyboards.deletePost(ctx)
+    );
+    ctx.scene.enter("deleteHashtag");
+  }
 }
 
 module.exports = {

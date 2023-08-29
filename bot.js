@@ -109,6 +109,10 @@ dotenv.config();
   stage.register(updatePost);
   const deletePost = new BaseScene("deletePost");
   stage.register(deletePost);
+  const updateHashtag = new BaseScene("updateHashtag");
+  stage.register(updateHashtag);
+  const deleteHashtag = new BaseScene("deleteHashtag");
+  stage.register(deleteHashtag);
 
   bot.use(stage.middleware());
 
@@ -234,6 +238,15 @@ dotenv.config();
   );
   updatePost.on("text", userPostController.updatePost.bind(userPostController));
   deletePost.on("text", userPostController.deletePost.bind(userPostController));
+  updateHashtag.on(
+    "text",
+    userPostController.updateHashtag.bind(userPostController)
+  );
+  deleteHashtag.on(
+    "text",
+    userPostController.deleteHashtag.bind(userPostController)
+  );
+
   bot.launch();
 
   return "Sam";

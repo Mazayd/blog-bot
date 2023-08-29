@@ -29,7 +29,6 @@ class UserPostController {
         return this.#view.notPost(ctx);
       }
       ctx.session.post = post;
-      // console.log("post :>> ", post);
       this.#view.getMyPost(ctx, post);
     } else {
       this.#view.userPost(ctx);
@@ -81,6 +80,8 @@ class UserPostController {
       this.#view.updatePost(ctx);
     } else if (ctx.message.text === ctx.i18n.t("buttons.deletePost")) {
       this.#view.deletePost(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.updateHashtag")) {
+      this.#view.updateHashtag(ctx);
     }
   }
 
@@ -170,6 +171,44 @@ class UserPostController {
       this.#view.mainMenu(ctx);
     } else {
       this.#view.deletePost(ctx);
+    }
+  }
+  async updateHashtag(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.back")) {
+      this.#view.getMyPost(ctx, ctx.session.post);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.deleteHashtag")) {
+      this.#view.deleteHashtag(ctx);
+    } else {
+      const newPost = await this.#postServices.updatePost(
+        ctx.session.post._id,
+        ctx.from.id,
+        {
+          hashtags: ctx.message.text.split(", "),
+        }
+      );
+      ctx.session.post = newPost;
+      ctx.reply(ctx.i18n.t("phrases.successfullyUpdateHashtag"));
+      this.#view.getMyPost(ctx, ctx.session.post);
+    }
+  }
+  async deleteHashtag(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.no")) {
+      this.#view.updateHashtag(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.yes")) {
+      const newPost = await this.#postServices.updatePost(
+        ctx.session.post._id,
+        ctx.from.id,
+        {
+          hashtags: [],
+        }
+      );
+      ctx.session.post = newPost;
+      ctx.reply(ctx.i18n.t("phrases.successfulyDeleteHashtag"));
+      this.#view.getMyPost(ctx, ctx.session.post);
     }
   }
 }

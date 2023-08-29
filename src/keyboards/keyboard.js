@@ -64,7 +64,7 @@ class Keyboards {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.back")],
       [ctx.i18n.t("buttons.getComments"), ctx.i18n.t("buttons.updatePost")],
-      [ctx.i18n.t("buttons.deletePost")],
+      [ctx.i18n.t("buttons.deletePost"), ctx.i18n.t("buttons.updateHashtag")],
     ])
       .resize()
       .extra();
@@ -128,6 +128,21 @@ class Keyboards {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.mainMenu")],
       [ctx.i18n.t("buttons.yes"), ctx.i18n.t("buttons.no")],
+    ])
+      .resize()
+      .extra();
+  }
+  updateHashtag(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
+      [ctx.i18n.t("buttons.deleteHashtag")],
+    ])
+      .resize()
+      .extra();
+  }
+  updateHashtagNoHashtag(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
     ])
       .resize()
       .extra();
