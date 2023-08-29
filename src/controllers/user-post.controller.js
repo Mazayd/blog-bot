@@ -121,22 +121,35 @@ class UserPostController {
   }
 
   async inlineComment(ctx) {
-    const newIterator = parseInt(ctx.update.callback_query.data);
-    if (newIterator < 0) {
-      ctx.session.comment_iterator = ctx.session.post.comments.length - 1;
-    } else if (newIterator === ctx.session.post.comments.length) {
-      ctx.session.comment_iterator = 0;
-    } else if (newIterator === ctx.session.comment_iterator) {
-      return null;
+    if (
+      ctx.update.callback_query.data === "🖤" ||
+      ctx.update.callback_query.data === "❤️"
+    ) {
+      const newComment = await this.#commentServices.likeComment(
+        ctx.session.comment._id,
+        ctx.from.id
+      );
+      const author = await this.#userServices.getUserById(newComment.user);
+      ctx.session.comment = newComment;
+      this.#view.changeOfComment(ctx, newComment, author);
     } else {
-      ctx.session.comment_iterator = newIterator;
+      const newIterator = parseInt(ctx.update.callback_query.data);
+      if (newIterator < 0) {
+        ctx.session.comment_iterator = ctx.session.post.comments.length - 1;
+      } else if (newIterator === ctx.session.post.comments.length) {
+        ctx.session.comment_iterator = 0;
+      } else if (newIterator === ctx.session.comment_iterator) {
+        return null;
+      } else {
+        ctx.session.comment_iterator = newIterator;
+      }
+      const comment = await this.#commentServices.getCommentById(
+        ctx.session.post.comments[ctx.session.comment_iterator]
+      );
+      ctx.session.comment = comment;
+      const author = await this.#userServices.getUserById(comment.user);
+      this.#view.changeOfComment(ctx, comment, author);
     }
-    const comment = await this.#commentServices.getCommentById(
-      ctx.session.post.comments[ctx.session.comment_iterator]
-    );
-    ctx.session.comment = comment;
-    const author = await this.#userServices.getUserById(comment.user);
-    this.#view.changeOfComment(ctx, comment, author);
   }
 
   async getMyPostInline(ctx) {
