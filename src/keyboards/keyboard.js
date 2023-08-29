@@ -71,7 +71,10 @@ class Keyboards {
   }
 
   getMyComment(ctx) {
-    return Markup.keyboard([[ctx.i18n.t("buttons.back")]])
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back")],
+      [ctx.i18n.t("buttons.deleteComment")],
+    ])
       .resize()
       .extra();
   }
