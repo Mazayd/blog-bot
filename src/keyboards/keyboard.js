@@ -64,6 +64,7 @@ class Keyboards {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.back")],
       [ctx.i18n.t("buttons.getComments"), ctx.i18n.t("buttons.updatePost")],
+      [ctx.i18n.t("buttons.deletePost")],
     ])
       .resize()
       .extra();
@@ -121,6 +122,15 @@ class Keyboards {
       ],
     };
     return replyMarkup;
+  }
+
+  deletePost(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.mainMenu")],
+      [ctx.i18n.t("buttons.yes"), ctx.i18n.t("buttons.no")],
+    ])
+      .resize()
+      .extra();
   }
 }
 
