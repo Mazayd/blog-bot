@@ -178,6 +178,8 @@ class View {
     let message = ctx.i18n
       .t("phrases.post")
       .replace("$content", post.content)
+      .replace("$likes", post.numberOfLikes)
+      .replace("$comment", post.comments.length)
       .replace(
         "$dateCreate",
         new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
@@ -216,6 +218,8 @@ class View {
     let message = ctx.i18n
       .t("phrases.post")
       .replace("$content", post.content)
+      .replace("$likes", post.numberOfLikes)
+      .replace("$comment", post.comments.length)
       .replace(
         "$dateCreate",
         new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
@@ -242,6 +246,7 @@ class View {
     const message = ctx.i18n
       .t("phrases.comment")
       .replace("$content", comment.content)
+      .replace("$likes", comment.numberOfLikes)
       .replace("$author", author.nickName)
       .replace(
         "$dateCreate",
@@ -280,6 +285,7 @@ class View {
     const message = ctx.i18n
       .t("phrases.comment")
       .replace("$content", comment.content)
+      .replace("$likes", comment.numberOfLikes)
       .replace("$author", author.nickName)
       .replace(
         "$dateCreate",
