@@ -83,6 +83,8 @@ class UserPostController {
       this.#view.deletePost(ctx);
     } else if (ctx.message.text === ctx.i18n.t("buttons.updateHashtag")) {
       this.#view.updateHashtag(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.writeComment")) {
+      this.#view.writeComment(ctx);
     }
   }
 
@@ -116,6 +118,28 @@ class UserPostController {
       );
       ctx.session.post = post;
       ctx.reply(ctx.i18n.t("phrases.successfulyDeleteComment"));
+      this.#view.getMyPost(ctx, post);
+    }
+  }
+
+  async writeComment(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.back")) {
+      this.#view.getMyPost(ctx, ctx.session.post);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else {
+      await this.#commentServices.newComment(
+        ctx.from.id,
+        ctx.session.post._id,
+        {
+          content: ctx.message.text,
+        }
+      );
+      const post = await this.#postServices.getPostById(
+        ctx.session.user.posts[ctx.session.post_iterator]
+      );
+      ctx.session.post = post;
+      ctx.reply(ctx.i18n.t("phrases.commentCreated"));
       this.#view.getMyPost(ctx, post);
     }
   }
@@ -201,6 +225,7 @@ class UserPostController {
       this.#view.getMyPost(ctx, post);
     }
   }
+
   async deletePost(ctx) {
     if (ctx.message.text === ctx.i18n.t("buttons.yes")) {
       await this.#postServices.deletePost(
@@ -221,6 +246,7 @@ class UserPostController {
       this.#view.deletePost(ctx);
     }
   }
+
   async updateHashtag(ctx) {
     if (ctx.message.text === ctx.i18n.t("buttons.back")) {
       this.#view.getMyPost(ctx, ctx.session.post);
@@ -241,6 +267,7 @@ class UserPostController {
       this.#view.getMyPost(ctx, ctx.session.post);
     }
   }
+
   async deleteHashtag(ctx) {
     if (ctx.message.text === ctx.i18n.t("buttons.no")) {
       this.#view.updateHashtag(ctx);
