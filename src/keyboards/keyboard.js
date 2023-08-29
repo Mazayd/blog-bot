@@ -115,6 +115,50 @@ class Keyboards {
     return replyMarkup;
   }
 
+  myOnePostInline(ctx) {
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: ctx.session.post.likes.find(
+              (item) => item === ctx.session.user._id
+            )
+              ? "❤️"
+              : "🖤",
+            callback_data: ctx.session.post.likes.find(
+              (item) => item === ctx.session.user._id
+            )
+              ? "❤️"
+              : "🖤",
+          },
+        ],
+      ],
+    };
+    return replyMarkup;
+  }
+
+  myOneCommentInline(ctx) {
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: ctx.session.comment.likes.find(
+              (item) => item === ctx.session.user._id
+            )
+              ? "❤️"
+              : "🖤",
+            callback_data: ctx.session.comment.likes.find(
+              (item) => item === ctx.session.user._id
+            )
+              ? "❤️"
+              : "🖤",
+          },
+        ],
+      ],
+    };
+    return replyMarkup;
+  }
+
   myCommentInline(ctx) {
     const likeInlineKeyboard = {
       text: ctx.session.comment.likes.find(
