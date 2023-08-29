@@ -79,6 +79,8 @@ class UserPostController {
       this.#view.getComments(ctx, comment, author);
     } else if (ctx.message.text === ctx.i18n.t("buttons.updatePost")) {
       this.#view.updatePost(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.deletePost")) {
+      this.#view.deletePost(ctx);
     }
   }
 
@@ -148,6 +150,26 @@ class UserPostController {
         }
       );
       this.#view.getMyPost(ctx, post);
+    }
+  }
+  async deletePost(ctx) {
+    if (ctx.message.text === ctx.i18n.t("buttons.yes")) {
+      await this.#postServices.deletePost(
+        ctx.session.user.posts[ctx.session.post_iterator],
+        ctx.from.id
+      );
+      const user = await this.#userServices.getUserByTgId(ctx.from.id);
+      ctx.session.user = user;
+      this.#view.successfullyRemoved(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.no")) {
+      const post = await this.#postServices.getPostById(
+        ctx.session.user.posts[ctx.session.post_iterator]
+      );
+      this.#view.getMyPost(ctx, post);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.mainMenu")) {
+      this.#view.mainMenu(ctx);
+    } else {
+      this.#view.deletePost(ctx);
     }
   }
 }

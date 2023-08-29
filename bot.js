@@ -107,6 +107,8 @@ dotenv.config();
   stage.register(getUserPostComment);
   const updatePost = new BaseScene("updatePost");
   stage.register(updatePost);
+  const deletePost = new BaseScene("deletePost");
+  stage.register(deletePost);
 
   bot.use(stage.middleware());
 
@@ -231,6 +233,7 @@ dotenv.config();
     userPostController.inlineComment.bind(userPostController)
   );
   updatePost.on("text", userPostController.updatePost.bind(userPostController));
+  deletePost.on("text", userPostController.deletePost.bind(userPostController));
   bot.launch();
 
   return "Sam";

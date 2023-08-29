@@ -305,6 +305,22 @@ class View {
     );
     ctx.scene.enter("updatePost");
   }
+
+  deletePost(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.deletePost"),
+      this.#keyboards.deletePost(ctx)
+    );
+    ctx.scene.enter("deletePost");
+  }
+
+  successfullyRemoved(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.successfullyRemoved"),
+      this.#keyboards.userPost(ctx)
+    );
+    ctx.scene.enter("userPost");
+  }
 }
 
 module.exports = {
