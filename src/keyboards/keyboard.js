@@ -1,10 +1,16 @@
 const { Markup } = require("telegraf");
 const i18n = require("i18n");
+const {
+  createLikeButton,
+  createNavigationButtons,
+  createDeleteButton,
+} = require("../reusable_functions/button_helpers");
 
 class Keyboards {
   mainMenu(ctx) {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.userSetting"), ctx.i18n.t("buttons.userPost")],
+      [ctx.i18n.t("buttons.getAnotherUser")],
     ])
       .resize()
       .extra();
@@ -79,120 +85,60 @@ class Keyboards {
       .extra();
   }
 
-  myPostInline(ctx) {
-    const likeInlineKeyboard = {
-      text: ctx.session.post.likes.find((item) => item === ctx.session.user._id)
-        ? "❤️"
-        : "🖤",
-      callback_data: ctx.session.post.likes.find(
-        (item) => item === ctx.session.user._id
-      )
-        ? "❤️"
-        : "🖤",
-    };
+  async myPostInline(ctx, user) {
+    const likedByUser = ctx.session.post.likes.includes(user._id);
+
+    const navigationButtons = createNavigationButtons(
+      ctx.session.post_iterator,
+      ctx.session.user.posts.length
+    );
 
     const replyMarkup = {
-      inline_keyboard: [
-        [likeInlineKeyboard],
-        [
-          {
-            text: "⏪",
-            callback_data: parseInt(ctx.session.post_iterator) - 1,
-          },
-          {
-            text: `${parseInt(ctx.session.post_iterator) + 1} c ${
-              ctx.session.user.posts.length
-            }`,
-            callback_data: parseInt(ctx.session.post_iterator),
-          },
-          {
-            text: "⏩",
-            callback_data: parseInt(ctx.session.post_iterator) + 1,
-          },
-        ],
-      ],
+      inline_keyboard: [[createLikeButton(likedByUser)], navigationButtons],
     };
+
     return replyMarkup;
   }
 
-  myOnePostInline(ctx) {
+  myOnePostInline(ctx, user) {
+    const likedByUser = ctx.session.post.likes.includes(user._id);
+
     const replyMarkup = {
-      inline_keyboard: [
-        [
-          {
-            text: ctx.session.post.likes.find(
-              (item) => item === ctx.session.user._id
-            )
-              ? "❤️"
-              : "🖤",
-            callback_data: ctx.session.post.likes.find(
-              (item) => item === ctx.session.user._id
-            )
-              ? "❤️"
-              : "🖤",
-          },
-        ],
-      ],
+      inline_keyboard: [[createLikeButton(likedByUser)]],
     };
+
     return replyMarkup;
   }
 
-  myOneCommentInline(ctx) {
+  myOneCommentInline(ctx, user) {
+    const likedByUser = ctx.session.comment.likes.includes(user._id);
+
     const replyMarkup = {
-      inline_keyboard: [
-        [
-          {
-            text: ctx.session.comment.likes.find(
-              (item) => item === ctx.session.user._id
-            )
-              ? "❤️"
-              : "🖤",
-            callback_data: ctx.session.comment.likes.find(
-              (item) => item === ctx.session.user._id
-            )
-              ? "❤️"
-              : "🖤",
-          },
-        ],
-      ],
+      inline_keyboard: [[createLikeButton(likedByUser)]],
     };
+
     return replyMarkup;
   }
 
-  myCommentInline(ctx) {
-    const likeInlineKeyboard = {
-      text: ctx.session.comment.likes.find(
-        (item) => item === ctx.session.user._id
-      )
-        ? "❤️"
-        : "🖤",
-      callback_data: ctx.session.comment.likes.find(
-        (item) => item === ctx.session.user._id
-      )
-        ? "❤️"
-        : "🖤",
-    };
+  myCommentInline(ctx, user) {
+    const likedByUser = ctx.session.comment.likes.includes(user._id);
+
+    const navigationButtons = createNavigationButtons(
+      ctx.session.comment_iterator,
+      ctx.session.post.comments.length
+    );
+
     const replyMarkup = {
       inline_keyboard: [
-        [likeInlineKeyboard],
-        [
-          {
-            text: "⏪",
-            callback_data: `${parseInt(ctx.session.comment_iterator) - 1}`,
-          },
-          {
-            text: `${parseInt(ctx.session.comment_iterator) + 1} c ${
-              ctx.session.post.comments.length
-            }`,
-            callback_data: `${parseInt(ctx.session.comment_iterator)}`,
-          },
-          {
-            text: "⏩",
-            callback_data: `${parseInt(ctx.session.comment_iterator) + 1}`,
-          },
-        ],
+        [createLikeButton(likedByUser)],
+        navigationButtons,
+        user._id === ctx.session.comment.user &&
+        user._id !== ctx.session.post.user
+          ? [createDeleteButton()]
+          : [],
       ],
     };
+
     return replyMarkup;
   }
 
@@ -204,6 +150,7 @@ class Keyboards {
       .resize()
       .extra();
   }
+
   updateHashtag(ctx) {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
@@ -212,9 +159,40 @@ class Keyboards {
       .resize()
       .extra();
   }
+
   updateHashtagNoHashtag(ctx) {
     return Markup.keyboard([
       [ctx.i18n.t("buttons.mainMenu"), ctx.i18n.t("buttons.back")],
+    ])
+      .resize()
+      .extra();
+  }
+
+  getAnotherUser(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back")],
+      [
+        ctx.i18n.t("buttons.getUserByNickname"),
+        ctx.i18n.t("buttons.getUsersByName"),
+      ],
+    ])
+      .resize()
+      .extra();
+  }
+
+  processUser(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back"), ctx.i18n.t("buttons.mainMenu")],
+      [ctx.i18n.t("buttons.getPostAnotherUser")],
+    ])
+      .resize()
+      .extra();
+  }
+
+  getUserPost(ctx) {
+    return Markup.keyboard([
+      [ctx.i18n.t("buttons.back"), ctx.i18n.t("buttons.mainMenu")],
+      [ctx.i18n.t("buttons.getComments"), ctx.i18n.t("buttons.writeComment")],
     ])
       .resize()
       .extra();

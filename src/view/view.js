@@ -1,4 +1,9 @@
 const { Keyboards } = require("../keyboards/keyboard");
+const {
+  createPostMessage,
+  sendFormattedMessage,
+  createCommentMessage,
+} = require("../reusable_functions/message_utils");
 
 class View {
   #userServices;
@@ -153,168 +158,109 @@ class View {
   }
 
   async postCreated(ctx, post) {
-    let message = ctx.i18n
-      .t("phrases.postCreated")
-      .replace("$content", post.content)
-      .replace(
-        "$dateCreate",
-        new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-      );
-
-    if (post.hashtags.length === 0) {
-      message = message.replace("$hashtags", "Отсутствуют");
-    } else {
-      message = message.replace("$hashtags", post.hashtags[0]);
-    }
+    let message = createPostMessage(ctx, post);
     ctx.reply(message, this.#keyboards.userPost(ctx));
     ctx.scene.enter("userPost");
   }
 
   async getMyPost(ctx, post) {
-    let message = ctx.i18n
-      .t("phrases.post")
-      .replace("$content", post.content)
-      .replace("$likes", post.numberOfLikes)
-      .replace("$comment", post.comments.length)
-      .replace(
-        "$dateCreate",
-        new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-      );
-    if (post.hashtags.length === 0) {
-      message = message.replace("$hashtags", "Отсутствуют");
-    } else {
-      message = message.replace("$hashtags", `${post.hashtags.join(", ")}`);
-    }
+    const message = createPostMessage(ctx, post);
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+
     ctx.reply(ctx.i18n.t("phrases.getPost"), this.#keyboards.getMyPost(ctx));
-    if (ctx.session.user.posts.length > 1) {
-      ctx
-        .reply(message, {
-          reply_markup: this.#keyboards.myPostInline(ctx),
-        })
-        .then((sentMessage) => {
-          const message_id = sentMessage.message_id;
-          ctx.deleteMessage(ctx.session.message_id);
-          ctx.session.message_id = message_id;
-        });
-    } else {
-      ctx
-        .reply(message, this.#keyboards.myOnePostInline(ctx))
-        .then((sentMessage) => {
-          const message_id = sentMessage.message_id;
-          ctx.deleteMessage(ctx.session.message_id);
-          ctx.session.message_id = message_id;
-        });
-    }
+
+    const keyboard =
+      ctx.session.user.posts.length > 1
+        ? await this.#keyboards.myPostInline(ctx, user)
+        : await this.#keyboards.myOnePostInline(ctx, user);
+
+    await sendFormattedMessage(ctx, message, { reply_markup: keyboard });
     ctx.scene.enter("getMyPost");
   }
 
-  changeOfPost(ctx, post) {
-    let message = ctx.i18n
-      .t("phrases.post")
-      .replace("$content", post.content)
-      .replace("$likes", post.numberOfLikes)
-      .replace("$comment", post.comments.length)
-      .replace(
-        "$dateCreate",
-        new Date(post.dateOfCreation).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-      );
-    if (post.hashtags.length === 0) {
-      message = message.replace("$hashtags", "Отсутствуют");
-    } else {
-      message = message.replace("$hashtags", `${post.hashtags.join(", ")}`);
-    }
-    if (ctx.session.user.posts.length > 1) {
-      ctx.editMessageText(message, {
-        reply_markup: this.#keyboards.myPostInline(ctx),
-      });
-    } else {
-      ctx.editMessageText(message, {
-        reply_markup: this.#keyboards.myOnePostInline(ctx),
-      });
-    }
+  async changeOfPost(ctx, post) {
+    const message = createPostMessage(ctx, post);
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+    const keyboard =
+      ctx.session.user.posts.length > 1
+        ? await this.#keyboards.myPostInline(ctx, user)
+        : await this.#keyboards.myOnePostInline(ctx, user);
+
+    await ctx.editMessageText(message, { reply_markup: keyboard });
+  }
+
+  async getComments(ctx, comment, author) {
+    const message = createCommentMessage(ctx, comment, author);
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+
+    ctx.reply(
+      ctx.i18n.t("phrases.getComment"),
+      this.#keyboards.getMyComment(ctx)
+    );
+
+    const keyboard =
+      ctx.session.post.comments.length > 1
+        ? await this.#keyboards.myCommentInline(ctx, user)
+        : await this.#keyboards.myOneCommentInline(ctx, user);
+
+    await sendFormattedMessage(ctx, message, { reply_markup: keyboard });
+
+    ctx.scene.enter("getUserPostComment");
+  }
+
+  async changeOfComment(ctx, comment, author) {
+    const message = createCommentMessage(ctx, comment, author);
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+    const keyboard =
+      ctx.session.post.comments.length > 1
+        ? await this.#keyboards.myCommentInline(ctx, user)
+        : await this.#keyboards.myOneCommentInline(ctx, user);
+
+    await ctx.editMessageText(message, { reply_markup: keyboard });
+  }
+
+  async getAnotherUserPost(ctx, post) {
+    const message = createPostMessage(ctx, post);
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+
+    ctx.reply(
+      ctx.i18n.t("phrases.getAnotherPost"),
+      this.#keyboards.getUserPost(ctx)
+    );
+
+    const keyboard =
+      ctx.session.user.posts.length > 1
+        ? await this.#keyboards.myPostInline(ctx, user)
+        : await this.#keyboards.myOnePostInline(ctx, user);
+
+    await sendFormattedMessage(ctx, message, { reply_markup: keyboard });
+    ctx.scene.enter("getAnotherUserPost");
+  }
+
+  async getAnotherUserComment(ctx, comment, author) {
+    const message = createCommentMessage(ctx, comment, author);
+    const user = await this.#userServices.getUserByTgId(ctx.from.id);
+    ctx.reply(
+      ctx.i18n.t("phrases.getComment"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+
+    const keyboard =
+      ctx.session.post.comments.length > 1
+        ? await this.#keyboards.myCommentInline(ctx, user)
+        : await this.#keyboards.myOneCommentInline(ctx, user);
+
+    await sendFormattedMessage(ctx, message, { reply_markup: keyboard });
+
+    ctx.scene.enter("getAnotherUserComment");
   }
 
   notPost(ctx) {
     ctx.reply(ctx.i18n.t("phrases.notPost"));
   }
 
-  getComments(ctx, comment, author) {
-    const message = ctx.i18n
-      .t("phrases.comment")
-      .replace("$content", comment.content)
-      .replace("$likes", comment.numberOfLikes)
-      .replace("$author", author.nickName)
-      .replace(
-        "$dateCreate",
-        new Date(comment.dateOfCreate).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-      );
-    ctx.reply(
-      ctx.i18n.t("phrases.getComment"),
-      this.#keyboards.getMyComment(ctx)
-    );
-    if (ctx.session.post.comments.length > 1) {
-      ctx
-        .reply(message, {
-          reply_markup: this.#keyboards.myCommentInline(ctx),
-        })
-        .then((sentMessage) => {
-          ctx.deleteMessage(ctx.session.message_id);
-          ctx.session.message_id = sentMessage.message_id;
-        });
-    } else {
-      ctx
-        .reply(message, {
-          reply_markup: this.#keyboards.myOneCommentInline(ctx),
-        })
-        .then((sentMessage) => {
-          const message_id = sentMessage.message_id;
-          ctx.deleteMessage(ctx.session.message_id);
-          ctx.session.message_id = message_id;
-        });
-    }
-
-    ctx.scene.enter("getUserPostComment");
-  }
-
-  changeOfComment(ctx, comment, author) {
-    const message = ctx.i18n
-      .t("phrases.comment")
-      .replace("$content", comment.content)
-      .replace("$likes", comment.numberOfLikes)
-      .replace("$author", author.nickName)
-      .replace(
-        "$dateCreate",
-        new Date(comment.dateOfCreate).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
-      );
-    if (ctx.session.post.comments.length > 1) {
-      ctx.editMessageText(message, {
-        reply_markup: this.#keyboards.myCommentInline(ctx),
-      });
-    } else {
-      ctx.editMessageText(message, {
-        reply_markup: this.#keyboards.myOneCommentInline(ctx),
-      });
-    }
+  notAnotherPost(ctx) {
+    ctx.reply(ctx.i18n.t("phrases.notAnotherPost"));
   }
 
   notComment(ctx) {
@@ -382,6 +328,57 @@ class View {
       this.#keyboards.backAndMainMenu(ctx)
     );
     ctx.scene.enter("writeComment");
+  }
+
+  writeCommentAnotherUser(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.writeComment"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("writeCommentAnotherUser");
+  }
+
+  getAnotherUser(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.getAnotherUser"),
+      this.#keyboards.getAnotherUser(ctx)
+    );
+    ctx.scene.enter("getAnotherUser");
+  }
+
+  getUserByNickname(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.getUserByNickname"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+    ctx.scene.enter("getUserByNickname");
+  }
+
+  nicknameNotFoundMessage(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.nicknameNotFoundMessage"),
+      this.#keyboards.backAndMainMenu(ctx)
+    );
+  }
+
+  processUserByNickname(ctx, user) {
+    const message = ctx.i18n
+      .t("phrases.anotherUserData")
+      .replace("$telegramId", user.telegramId)
+      .replace("$userName", user.name)
+      .replace("$userNickname", user.nickName)
+      .replace("$userAge", user.age)
+      .replace("$userSex", user.sex);
+    ctx.reply(message, this.#keyboards.processUser(ctx));
+    ctx.scene.enter("processUserByNickname");
+  }
+
+  deleteAnotherUserPostComment(ctx) {
+    ctx.reply(
+      ctx.i18n.t("phrases.deleteComment"),
+      this.#keyboards.deletePost(ctx)
+    );
+    ctx.scene.enter("deleteAnotherUserPostComment");
   }
 }
 

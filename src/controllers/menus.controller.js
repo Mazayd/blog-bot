@@ -20,6 +20,8 @@ class MenusController {
       this.#view.userSetting(ctx);
     } else if (ctx.message.text === ctx.i18n.t("buttons.userPost")) {
       this.#view.userPost(ctx);
+    } else if (ctx.message.text === ctx.i18n.t("buttons.getAnotherUser")) {
+      this.#view.getAnotherUser(ctx);
     } else {
       this.#view.mainMenu(ctx);
     }

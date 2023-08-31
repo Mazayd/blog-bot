@@ -8,6 +8,7 @@
     "noSceneMessage": "Похоже меня перезагрузили, вы в главном меню.",
     "help": "Список команд:\n\n/user_setting - Настройки пользователя.",
     "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n",
+    "anotherUserData": "Аккаунт пользователя:\ntelegram id: $telegramId\nИмя: $userName\nНикнейм: $userNickname\nВозраст: $userAge\nПол: $userSex\n",
     "userSetting": "Выберете параметр который хочете изменить.",
     "userSettingName": "Напишите имя которое вы хотите установить.",
     "newUserName": "Вы изменили свое имя\n\nВаше новое имя - $userName.",
@@ -37,7 +38,13 @@
     "successfulyDeleteComment": "Комментарий удален.",
     "deleteComment": "Вы точно хотите удалить комментарий?",
     "writeComment": "Здесь вы можете написать комментарий к посту.",
-    "commentCreated": "Комментарий создан"
+    "commentCreated": "Комментарий создан",
+    "getAnotherUser": "Здесь вы можете найти другого пользователя.\n\nВыберете удобный вам способ, и найдите нужного вам пользователя!",
+    "getUserByNickname": "Введите никнейм пользователя которого вы хотите найти.",
+    "nicknameNotFoundMessage": "Поьзователя по введенному никнейму не существует.",
+    "getAnotherPost": "Используя клавиатуру под сообщением вы можете просматривать свои посты.",
+    "notDelete": "Вы не можете удалять чужие комментарии.",
+    "notAnotherPost": "У пользователя еще нет постов."
   },
   "buttons": {
     "back": "Назад",
@@ -61,6 +68,10 @@
     "deleteHashtag": "Удалить хештеги",
     "updateHashtag": "Изменить хештеги",
     "deleteComment": "Удалить комментарий",
-    "writeComment": "Написать комментарий"
+    "writeComment": "Написать комментарий",
+    "getAnotherUser": "Найти другого пользователя",
+    "getUserByNickname": "По никнейму",
+    "getUsersByName": "По имени",
+    "getPostAnotherUser": "Посмотреть посты пользователя"
   }
 }

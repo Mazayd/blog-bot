@@ -156,6 +156,8 @@ class UserPostController {
       const author = await this.#userServices.getUserById(newComment.user);
       ctx.session.comment = newComment;
       this.#view.changeOfComment(ctx, newComment, author);
+    } else if (ctx.update.callback_query.data === "🗑") {
+      return this.#view.deleteAnotherUserPostComment(ctx);
     } else {
       const newIterator = parseInt(ctx.update.callback_query.data);
       if (newIterator < 0) {
