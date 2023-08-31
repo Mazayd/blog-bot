@@ -16,6 +16,9 @@ const {
 const {
   UserPostController,
 } = require("./src/controllers/user-post.controller");
+const {
+  GetAnotherUserController,
+} = require("./src/controllers/get-another-user.controller");
 
 const i18n = new I18n({
   directory: path.join(__dirname, "src/locales"),
@@ -55,6 +58,11 @@ dotenv.config();
     CommentServices
   );
   const userPostController = new UserPostController(
+    UserServices,
+    PostServices,
+    CommentServices
+  );
+  const getAnotherUserController = new GetAnotherUserController(
     UserServices,
     PostServices,
     CommentServices
@@ -117,6 +125,23 @@ dotenv.config();
   stage.register(deleteComment);
   const writeComment = new BaseScene("writeComment");
   stage.register(writeComment);
+
+  const getAnotherUser = new BaseScene("getAnotherUser");
+  stage.register(getAnotherUser);
+  const getUserByNickname = new BaseScene("getUserByNickname");
+  stage.register(getUserByNickname);
+  const processUserByNickname = new BaseScene("processUserByNickname");
+  stage.register(processUserByNickname);
+  const getAnotherUserPost = new BaseScene("getAnotherUserPost");
+  stage.register(getAnotherUserPost);
+  const getAnotherUserComment = new BaseScene("getAnotherUserComment");
+  stage.register(getAnotherUserComment);
+  const deleteAnotherUserPostComment = new BaseScene(
+    "deleteAnotherUserPostComment"
+  );
+  stage.register(deleteAnotherUserPostComment);
+  const writeCommentAnotherUser = new BaseScene("writeCommentAnotherUser");
+  stage.register(writeCommentAnotherUser);
 
   bot.use(stage.middleware());
 
@@ -328,6 +353,98 @@ dotenv.config();
     userPostController.writeComment.bind(userPostController)
   );
 
+  getAnotherUser.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  getAnotherUser.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  getAnotherUser.on(
+    "text",
+    getAnotherUserController.getAnotherUser.bind(getAnotherUserController)
+  );
+
+  getUserByNickname.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  getUserByNickname.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  getUserByNickname.on(
+    "text",
+    getAnotherUserController.getUserByNickname.bind(getAnotherUserController)
+  );
+
+  processUserByNickname.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  processUserByNickname.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  processUserByNickname.on(
+    "text",
+    getAnotherUserController.processUserByNickname.bind(
+      getAnotherUserController
+    )
+  );
+
+  getAnotherUserPost.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  getAnotherUserPost.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  getAnotherUserPost.on(
+    "text",
+    getAnotherUserController.getAnotherUserPost.bind(getAnotherUserController)
+  );
+  getAnotherUserPost.on(
+    "callback_query",
+    getAnotherUserController.getPostInline.bind(getAnotherUserController)
+  );
+
+  getAnotherUserComment.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  getAnotherUserComment.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  getAnotherUserComment.on(
+    "text",
+    getAnotherUserController.getAnotherUserComment.bind(
+      getAnotherUserController
+    )
+  );
+  getAnotherUserComment.on(
+    "callback_query",
+    userPostController.inlineComment.bind(userPostController)
+  );
+
+  deleteAnotherUserPostComment.start(
+    defaultActionController.startReply.bind(defaultActionController)
+  );
+  deleteAnotherUserPostComment.command(
+    "user_setting",
+    menusController.userSettingView.bind(menusController)
+  );
+  deleteAnotherUserPostComment.on(
+    "text",
+    getAnotherUserController.deleteAnotherUserPostComment.bind(
+      getAnotherUserController
+    )
+  );
+
+  writeCommentAnotherUser.on(
+    "text",
+    getAnotherUserController.writeCommentAnotherUser.bind(
+      getAnotherUserController
+    )
+  );
   bot.launch();
 
   return "Sam";
