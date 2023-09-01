@@ -8,7 +8,7 @@
     "noSceneMessage": "Похоже меня перезагрузили, вы в главном меню.",
     "help": "Список команд:\n\n/user_setting - Настройки пользователя.",
     "userData": "Ваш аккаунт:\nВаш telegram id: $telegramId\nВаше имя: $userName\nВаш никнейм: $userNickname\nВаш возраст: $userAge\nВаш пол: $userSex\n",
-    "anotherUserData": "Аккаунт пользователя:\ntelegram id: $telegramId\nИмя: $userName\nНикнейм: $userNickname\nВозраст: $userAge\nПол: $userSex\n",
+    "anotherUserData": "Аккаунт пользователя:\ntelegram id: $telegramId\nИмя: $userName\nНикнейм: $userNickname\nВозраст: $userAge\nПол: $userSex\nПостов: $posts",
     "userSetting": "Выберете параметр который хочете изменить.",
     "userSettingName": "Напишите имя которое вы хотите установить.",
     "newUserName": "Вы изменили свое имя\n\nВаше новое имя - $userName.",
@@ -42,9 +42,12 @@
     "getAnotherUser": "Здесь вы можете найти другого пользователя.\n\nВыберете удобный вам способ, и найдите нужного вам пользователя!",
     "getUserByNickname": "Введите никнейм пользователя которого вы хотите найти.",
     "nicknameNotFoundMessage": "Поьзователя по введенному никнейму не существует.",
-    "getAnotherPost": "Используя клавиатуру под сообщением вы можете просматривать свои посты.",
+    "getAnotherPost": "Используя клавиатуру под сообщением вы можете просматривать посты.",
     "notDelete": "Вы не можете удалять чужие комментарии.",
-    "notAnotherPost": "У пользователя еще нет постов."
+    "notAnotherPost": "У пользователя еще нет постов.",
+    "getUserByName": "Введите имя пользователя которого вы хотите найти.",
+    "usersNotFound": "Пользователей с таким именем не существует.",
+    "processUserByName": "Используя клавиатуру под сообщением вы можете просматривать пользователей."
   },
   "buttons": {
     "back": "Назад",
