@@ -1,5 +1,4 @@
 const { Markup } = require('telegraf');
-const i18n = require('i18n');
 const {
 	createLikeButton,
 	createNavigationButtons,

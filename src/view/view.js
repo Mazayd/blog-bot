@@ -106,36 +106,6 @@ class View {
 		await ctx.editMessageText(message, { reply_markup: keyboard });
 	}
 
-	async getAnotherUserPost(ctx, post) {
-		const message = createPostMessage(ctx, post);
-		const user = await this.#userServices.getUserByTgId(ctx.from.id);
-
-		ctx.reply(ctx.i18n.t('phrases.getAnotherPost'), this.#keyboards.getUserPost(ctx));
-
-		const keyboard =
-			ctx.session.user.posts.length > 1
-				? await this.#keyboards.myPostInline(ctx, user)
-				: await this.#keyboards.myOnePostInline(ctx, user);
-
-		await sendFormattedMessage(ctx, message, { reply_markup: keyboard });
-		ctx.scene.enter('getAnotherUserPost');
-	}
-
-	async getAnotherUserComment(ctx, comment, author) {
-		const message = createCommentMessage(ctx, comment, author);
-		const user = await this.#userServices.getUserByTgId(ctx.from.id);
-		ctx.reply(ctx.i18n.t('phrases.getComment'), this.#keyboards.backAndMainMenu(ctx));
-
-		const keyboard =
-			ctx.session.post.comments.length > 1
-				? await this.#keyboards.myCommentInline(ctx, user)
-				: await this.#keyboards.myOneCommentInline(ctx, user);
-
-		await sendFormattedMessage(ctx, message, { reply_markup: keyboard });
-
-		ctx.scene.enter('getAnotherUserComment');
-	}
-
 	notPost(ctx) {
 		ctx.reply(ctx.i18n.t('phrases.notPost'));
 	}
@@ -187,35 +157,13 @@ class View {
 		ctx.scene.enter('writeComment');
 	}
 
-	writeCommentAnotherUser(ctx) {
-		ctx.reply(ctx.i18n.t('phrases.writeComment'), this.#keyboards.backAndMainMenu(ctx));
-		ctx.scene.enter('writeCommentAnotherUser');
-	}
-
 	getAnotherUser(ctx) {
 		ctx.reply(ctx.i18n.t('phrases.getAnotherUser'), this.#keyboards.getAnotherUser(ctx));
 		ctx.scene.enter('getAnotherUser');
 	}
 
-	getUserByNickname(ctx) {
-		ctx.reply(ctx.i18n.t('phrases.getUserByNickname'), this.#keyboards.backAndMainMenu(ctx));
-		ctx.scene.enter('getUserByNickname');
-	}
-
 	nicknameNotFoundMessage(ctx) {
 		ctx.reply(ctx.i18n.t('phrases.nicknameNotFoundMessage'), this.#keyboards.backAndMainMenu(ctx));
-	}
-
-	processUserByNickname(ctx, user) {
-		const message = createUserMessage(ctx, user);
-
-		ctx.reply(message, this.#keyboards.processUser(ctx));
-		ctx.scene.enter('processUserByNickname');
-	}
-
-	deleteAnotherUserPostComment(ctx) {
-		ctx.reply(ctx.i18n.t('phrases.deleteComment'), this.#keyboards.deletePost(ctx));
-		ctx.scene.enter('deleteAnotherUserPostComment');
 	}
 }
 

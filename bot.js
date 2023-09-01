@@ -100,14 +100,14 @@ dotenv.config();
 	stage.register(getUserByNickname);
 	const processUserByNickname = new BaseScene('processUserByNickname');
 	stage.register(processUserByNickname);
-	const getAnotherUserPost = new BaseScene('getAnotherUserPost');
-	stage.register(getAnotherUserPost);
-	const getAnotherUserComment = new BaseScene('getAnotherUserComment');
-	stage.register(getAnotherUserComment);
-	const deleteAnotherUserPostComment = new BaseScene('deleteAnotherUserPostComment');
-	stage.register(deleteAnotherUserPostComment);
-	const writeCommentAnotherUser = new BaseScene('writeCommentAnotherUser');
-	stage.register(writeCommentAnotherUser);
+	const getUserPostByNickname = new BaseScene('getUserPostByNickname');
+	stage.register(getUserPostByNickname);
+	const getUserCommentByNickname = new BaseScene('getUserCommentByNickname');
+	stage.register(getUserCommentByNickname);
+	const deleteUserCommentByNickname = new BaseScene('deleteUserCommentByNickname');
+	stage.register(deleteUserCommentByNickname);
+	const writeUserCommentByNickname = new BaseScene('writeUserCommentByNickname');
+	stage.register(writeUserCommentByNickname);
 	const getUserByName = new BaseScene('getUserByName');
 	stage.register(getUserByName);
 	const processUsersByName = new BaseScene('processUsersByName');
@@ -210,26 +210,26 @@ dotenv.config();
 	processUserByNickname.command('user_setting', menusController.userSettingView.bind(menusController));
 	processUserByNickname.on('text', nicknameUserController.processUserByNickname.bind(nicknameUserController));
 
-	getAnotherUserPost.start(defaultActionController.startReply.bind(defaultActionController));
-	getAnotherUserPost.command('user_setting', menusController.userSettingView.bind(menusController));
-	getAnotherUserPost.on('text', nicknameUserController.getAnotherUserPost.bind(nicknameUserController));
-	getAnotherUserPost.on('callback_query', userPostController.getMyPostInline.bind(userPostController));
+	getUserPostByNickname.start(defaultActionController.startReply.bind(defaultActionController));
+	getUserPostByNickname.command('user_setting', menusController.userSettingView.bind(menusController));
+	getUserPostByNickname.on('text', nicknameUserController.getUserPostByNickname.bind(nicknameUserController));
+	getUserPostByNickname.on('callback_query', userPostController.getMyPostInline.bind(userPostController));
 
-	getAnotherUserComment.start(defaultActionController.startReply.bind(defaultActionController));
-	getAnotherUserComment.command('user_setting', menusController.userSettingView.bind(menusController));
-	getAnotherUserComment.on('text', nicknameUserController.getAnotherUserComment.bind(nicknameUserController));
-	getAnotherUserComment.on('callback_query', userPostController.inlineComment.bind(userPostController));
+	getUserCommentByNickname.start(defaultActionController.startReply.bind(defaultActionController));
+	getUserCommentByNickname.command('user_setting', menusController.userSettingView.bind(menusController));
+	getUserCommentByNickname.on('text', nicknameUserController.getUserCommentByNickname.bind(nicknameUserController));
+	getUserCommentByNickname.on('callback_query', userPostController.inlineComment.bind(userPostController));
 
-	deleteAnotherUserPostComment.start(defaultActionController.startReply.bind(defaultActionController));
-	deleteAnotherUserPostComment.command('user_setting', menusController.userSettingView.bind(menusController));
-	deleteAnotherUserPostComment.on(
+	deleteUserCommentByNickname.start(defaultActionController.startReply.bind(defaultActionController));
+	deleteUserCommentByNickname.command('user_setting', menusController.userSettingView.bind(menusController));
+	deleteUserCommentByNickname.on(
 		'text',
-		nicknameUserController.deleteAnotherUserPostComment.bind(nicknameUserController)
+		nicknameUserController.deleteUserCommentByNickname.bind(nicknameUserController)
 	);
 
-	writeCommentAnotherUser.start(defaultActionController.startReply.bind(defaultActionController));
-	writeCommentAnotherUser.command('user_setting', menusController.userSettingView.bind(menusController));
-	writeCommentAnotherUser.on('text', nicknameUserController.writeCommentAnotherUser.bind(nicknameUserController));
+	writeUserCommentByNickname.start(defaultActionController.startReply.bind(defaultActionController));
+	writeUserCommentByNickname.command('user_setting', menusController.userSettingView.bind(menusController));
+	writeUserCommentByNickname.on('text', nicknameUserController.writeUserCommentByNickname.bind(nicknameUserController));
 
 	getUserByName.start(defaultActionController.startReply.bind(defaultActionController));
 	getUserByName.command('user_setting', menusController.userSettingView.bind(menusController));

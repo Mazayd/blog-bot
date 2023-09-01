@@ -1,11 +1,13 @@
 const { View } = require('../view/view');
 const { Keyboards } = require('../keyboards/keyboard');
+const { NicknameUserView } = require('../view/nickname-user-view');
 
 class UserPostController {
 	#userServices;
 	#postServices;
 	#commentServices;
 	#view;
+	#nickNameUserView;
 	#keyboards;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
@@ -13,6 +15,7 @@ class UserPostController {
 		this.#commentServices = CommentServices;
 		this.#view = new View(UserServices, PostServices, CommentServices);
 		this.#keyboards = new Keyboards();
+		this.#nickNameUserView = new NicknameUserView(UserServices, PostServices, CommentServices);
 	}
 
 	async userPost(ctx) {
@@ -135,7 +138,7 @@ class UserPostController {
 			ctx.session.comment = newComment;
 			this.#view.changeOfComment(ctx, newComment, author);
 		} else if (data === '🗑') {
-			return this.#view.deleteAnotherUserPostComment(ctx);
+			return this.#nickNameUserView.deleteUserCommentByNickname(ctx);
 		} else {
 			const newIterator = parseInt(data);
 			if (newIterator < 0) {
