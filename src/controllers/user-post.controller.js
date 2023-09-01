@@ -155,22 +155,25 @@ class UserPostController {
 	}
 
 	async getMyPostInline(ctx) {
-		if (ctx.update.callback_query.data === '🖤' || ctx.update.callback_query.data === '❤️') {
+		const { data } = ctx.update.callback_query;
+		const { user } = ctx.session;
+
+		if (data === '🖤' || data === '❤️') {
 			const newPost = await this.#postServices.likePost(ctx.session.post._id, ctx.from.id);
 			ctx.session.post = newPost;
 			this.#view.changeOfPost(ctx, newPost);
 		} else {
-			const newIterator = parseInt(ctx.update.callback_query.data);
+			const newIterator = parseInt(data);
 			if (newIterator < 0) {
-				ctx.session.post_iterator = ctx.session.user.posts.length - 1;
-			} else if (newIterator === ctx.session.user.posts.length) {
+				ctx.session.post_iterator = user.posts.length - 1;
+			} else if (newIterator === user.posts.length) {
 				ctx.session.post_iterator = 0;
 			} else if (newIterator === ctx.session.post_iterator) {
 				return null;
 			} else {
 				ctx.session.post_iterator = newIterator;
 			}
-			const post = await this.#postServices.getPostById(ctx.session.user.posts[ctx.session.post_iterator]);
+			const post = await this.#postServices.getPostById(user.posts[ctx.session.post_iterator]);
 			ctx.session.post = post;
 			this.#view.changeOfPost(ctx, post);
 		}
