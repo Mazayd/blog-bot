@@ -1,17 +1,20 @@
 const { View } = require('../view/view');
 const { Keyboards } = require('../keyboards/keyboard');
+const { NicknameUserView } = require('../view/nickname-user-view');
 
 class NicknameUserController {
 	#userServices;
 	#postServices;
 	#commentServices;
 	#view;
+	#nickNameUserView;
 	#keyboards;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
 		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#nickNameUserView = new NicknameUserView(UserServices, PostServices, CommentServices);
 		this.#keyboards = new Keyboards();
 	}
 
@@ -28,13 +31,13 @@ class NicknameUserController {
 				return this.#view.nicknameNotFoundMessage(ctx);
 			}
 			ctx.session.user = user;
-			this.#view.processUserByNickname(ctx, user);
+			this.#nickNameUserView.processUserByNickname(ctx, user);
 		}
 	}
 
 	async processUserByNickname(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.getUserByNickname(ctx);
+			this.#nickNameUserView.getUserByNickname(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
 			this.#view.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getPostAnotherUser')) {
@@ -46,17 +49,17 @@ class NicknameUserController {
 			}
 
 			ctx.session.post = post;
-			this.#view.getAnotherUserPost(ctx, post);
+			this.#nickNameUserView.getUserPostByNickname(ctx, post);
 		}
 	}
 
-	async getAnotherUserPost(ctx) {
+	async getUserPostByNickname(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.processUserByNickname(ctx, ctx.session.user);
+			this.#nickNameUserView.processUserByNickname(ctx, ctx.session.user);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
 			this.#view.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.writeComment')) {
-			this.#view.writeCommentAnotherUser(ctx);
+			this.#nickNameUserView.writeUserCommentByNickname(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getComments')) {
 			ctx.session.comment_iterator = 0;
 			const comment = await this.#commentServices.getCommentById(ctx.session.post.comments[0]);
@@ -67,24 +70,22 @@ class NicknameUserController {
 
 			ctx.session.comment = comment;
 			const author = await this.#userServices.getUserById(comment.user);
-			this.#view.getAnotherUserComment(ctx, comment, author);
+			this.#nickNameUserView.getUserCommentByNickname(ctx, comment, author);
 		}
 	}
 
-	async getAnotherUserComment(ctx) {
+	async getUserCommentByNickname(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.getAnotherUserPost(ctx, ctx.session.post);
+			this.#nickNameUserView.getUserPostByNickname(ctx, ctx.session.post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
 			this.#view.mainMenu(ctx);
-		} else if (ctx.message.text === ctx.i18n.t('buttons.deleteComment')) {
-			this.#view.deleteAnotherUserPostComment(ctx);
 		}
 	}
 
-	async deleteAnotherUserPostComment(ctx) {
+	async deleteUserCommentByNickname(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.no')) {
 			const author = await this.#userServices.getUserById(ctx.session.comment.user);
-			this.#view.getAnotherUserComment(ctx, ctx.session.comment, author);
+			this.#nickNameUserView.getUserCommentByNickname(ctx, ctx.session.comment, author);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.yes')) {
 			const deleteComment = await this.#commentServices.deleteComment(ctx.from.id, ctx.session.comment._id);
 
@@ -96,13 +97,13 @@ class NicknameUserController {
 			ctx.session.post = post;
 
 			ctx.reply(ctx.i18n.t('phrases.successfulyDeleteComment'));
-			this.#view.getAnotherUserPost(ctx, ctx.session.post);
+			this.#nickNameUserView.getUserPostByNickname(ctx, ctx.session.post);
 		}
 	}
 
-	async writeCommentAnotherUser(ctx) {
+	async writeUserCommentByNickname(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.getAnotherUserPost(ctx, ctx.session.post);
+			this.#nickNameUserView.getUserPostByNickname(ctx, ctx.session.post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
 			this.#view.mainMenu(ctx);
 		} else {
@@ -112,7 +113,7 @@ class NicknameUserController {
 			const post = await this.#postServices.getPostById(ctx.session.post._id);
 			ctx.session.post = post;
 			ctx.reply(ctx.i18n.t('phrases.commentCreated'));
-			this.#view.getAnotherUserPost(ctx, post);
+			this.#nickNameUserView.getUserPostByNickname(ctx, ctx.session.post);
 		}
 	}
 }
