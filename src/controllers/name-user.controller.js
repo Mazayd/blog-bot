@@ -1,4 +1,4 @@
-const { View } = require('../view/view');
+const { CommonView } = require('../view/common-views');
 const { NameUserView } = require('../view/name-user-view');
 const { Keyboards } = require('../keyboards/keyboard');
 
@@ -6,22 +6,22 @@ class NameUserController {
 	#userServices;
 	#postServices;
 	#commentServices;
-	#view;
+	#commonView;
 	#nameUserView;
 	#keyboards;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
-		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#commonView = new CommonView(UserServices, PostServices, CommentServices);
 		this.#keyboards = new Keyboards();
 		this.#nameUserView = new NameUserView(UserServices, PostServices, CommentServices);
 	}
 	async getUserByName(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.getAnotherUser(ctx);
+			this.#commonView.getAnotherUser(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			const users = await this.#userServices.getUsersByName(ctx.message.text);
 
@@ -40,20 +40,20 @@ class NameUserController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#nameUserView.getUserByName(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getPostAnotherUser')) {
 			if (ctx.session.user.telegramId !== ctx.from.id.toString()) {
 				ctx.session.post_iterator = 0;
 				const post = await this.#postServices.getPostById(ctx.session.user.posts[0]);
 
 				if (!post) {
-					return this.#view.notAnotherPost(ctx);
+					return this.#commonView.notAnotherPost(ctx);
 				}
 
 				ctx.session.post = post;
 				return this.#nameUserView.getUserPostByName(ctx, post);
 			}
-			this.#view.userPost(ctx);
+			this.#commonView.userPost(ctx);
 		}
 	}
 
@@ -61,7 +61,7 @@ class NameUserController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#nameUserView.processUsersByName(ctx, ctx.session.user);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.writeComment')) {
 			this.#nameUserView.writeUserCommentByName(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getComments')) {
@@ -69,7 +69,7 @@ class NameUserController {
 			const comment = await this.#commentServices.getCommentById(ctx.session.post.comments[0]);
 
 			if (!comment) {
-				return this.#view.notComment(ctx);
+				return this.#commonView.notComment(ctx);
 			}
 
 			ctx.session.comment = comment;
@@ -82,7 +82,7 @@ class NameUserController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#nameUserView.getUserPostByName(ctx, ctx.session.post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		}
 	}
 
@@ -109,7 +109,7 @@ class NameUserController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#nameUserView.getUserPostByName(ctx, ctx.session.post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			await this.#commentServices.newComment(ctx.from.id, ctx.session.post._id, {
 				content: ctx.message.text,
@@ -129,7 +129,7 @@ class NameUserController {
 			const newComment = await this.#commentServices.likeComment(ctx.session.comment._id, ctx.from.id);
 			const author = await this.#userServices.getUserById(newComment.user);
 			ctx.session.comment = newComment;
-			this.#view.changeOfComment(ctx, newComment, author);
+			this.#commonView.changeOfComment(ctx, newComment, author);
 		} else if (data === '🗑') {
 			return this.#nameUserView.deleteUserCommentByName(ctx);
 		} else {
@@ -146,7 +146,7 @@ class NameUserController {
 			const comment = await this.#commentServices.getCommentById(post.comments[ctx.session.comment_iterator]);
 			ctx.session.comment = comment;
 			const author = await this.#userServices.getUserById(comment.user);
-			this.#view.changeOfComment(ctx, comment, author);
+			this.#commonView.changeOfComment(ctx, comment, author);
 		}
 	}
 

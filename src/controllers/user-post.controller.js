@@ -1,52 +1,55 @@
-const { View } = require('../view/view');
+const { CommonView } = require('../view/common-views');
 const { Keyboards } = require('../keyboards/keyboard');
 const { NicknameUserView } = require('../view/nickname-user-view');
+const { UserPostView } = require('../view/user-post-view');
 
 class UserPostController {
 	#userServices;
 	#postServices;
 	#commentServices;
-	#view;
+	#commonView;
 	#nickNameUserView;
+	#userPostView;
 	#keyboards;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
-		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#commonView = new CommonView(UserServices, PostServices, CommentServices);
 		this.#keyboards = new Keyboards();
 		this.#nickNameUserView = new NicknameUserView(UserServices, PostServices, CommentServices);
+		this.#userPostView = new UserPostView(UserServices, PostServices, CommentServices);
 	}
 
 	async userPost(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.newPost')) {
-			this.#view.newPost(ctx);
+			this.#userPostView.newPost(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getPost')) {
 			ctx.session.post_iterator = 0;
 			const post = await this.#postServices.getPostById(ctx.session.user.posts[0]);
 			if (!post) {
-				return this.#view.notPost(ctx);
+				return this.#commonView.notPost(ctx);
 			}
 			ctx.session.post = post;
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		} else {
-			this.#view.userPost(ctx);
+			this.#commonView.userPost(ctx);
 		}
 	}
 
 	async newPost(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.userPost(ctx);
+			this.#commonView.userPost(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			const newPost = await this.#postServices.newPost(ctx.from.id, {
 				content: ctx.message.text,
 			});
 			ctx.session.user.posts.unshift(newPost._id);
-			this.#view.choosingHashtag(ctx);
+			this.#userPostView.choosingHashtag(ctx);
 		}
 	}
 
@@ -54,36 +57,36 @@ class UserPostController {
 		const newPostId = ctx.session.user.posts[0].toString();
 		if (ctx.message.text === ctx.i18n.t('buttons.skip')) {
 			const post = await this.#postServices.getPostById(newPostId);
-			this.#view.postCreated(ctx, post);
+			this.#userPostView.postCreated(ctx, post);
 		} else {
 			const post = await this.#postServices.updatePost(newPostId, ctx.from.id, {
 				hashtags: [ctx.message.text],
 			});
-			this.#view.postCreated(ctx, post);
+			this.#userPostView.postCreated(ctx, post);
 		}
 	}
 
 	async getMyPost(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.userPost(ctx);
+			this.#commonView.userPost(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getComments')) {
 			ctx.session.comment_iterator = 0;
 			const comment = await this.#commentServices.getCommentById(ctx.session.post.comments[0]);
 
 			if (!comment) {
-				return this.#view.notComment(ctx);
+				return this.#commonView.notComment(ctx);
 			}
 			ctx.session.comment = comment;
 			const author = await this.#userServices.getUserById(comment.user);
-			this.#view.getComments(ctx, comment, author);
+			this.#userPostView.getComments(ctx, comment, author);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.updatePost')) {
-			this.#view.updatePost(ctx);
+			this.#userPostView.updatePost(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.deletePost')) {
-			this.#view.deletePost(ctx);
+			this.#userPostView.deletePost(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.updateHashtag')) {
-			this.#view.updateHashtag(ctx);
+			this.#userPostView.updateHashtag(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.writeComment')) {
-			this.#view.writeComment(ctx);
+			this.#userPostView.writeComment(ctx);
 		}
 	}
 
@@ -91,32 +94,32 @@ class UserPostController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			const post = await this.#postServices.getPostById(ctx.session.user.posts[ctx.session.post_iterator]);
 			ctx.session.post = post;
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.deleteComment')) {
-			this.#view.deleteComment(ctx);
+			this.#userPostView.deleteComment(ctx);
 		}
 	}
 
 	async deleteComment(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.no')) {
 			const author = await this.#userServices.getUserById(ctx.session.comment.user);
-			this.#view.getComments(ctx, ctx.session.comment, author);
+			this.#userPostView.getComments(ctx, ctx.session.comment, author);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.yes')) {
 			await this.#commentServices.deleteComment(ctx.from.id, ctx.session.comment._id);
 			const post = await this.#postServices.getPostById(ctx.session.user.posts[ctx.session.post_iterator]);
 			ctx.session.post = post;
 			ctx.reply(ctx.i18n.t('phrases.successfulyDeleteComment'));
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		}
 	}
 
 	async writeComment(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.getMyPost(ctx, ctx.session.post);
+			this.#userPostView.getMyPost(ctx, ctx.session.post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			await this.#commentServices.newComment(ctx.from.id, ctx.session.post._id, {
 				content: ctx.message.text,
@@ -124,7 +127,7 @@ class UserPostController {
 			const post = await this.#postServices.getPostById(ctx.session.user.posts[ctx.session.post_iterator]);
 			ctx.session.post = post;
 			ctx.reply(ctx.i18n.t('phrases.commentCreated'));
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		}
 	}
 
@@ -136,7 +139,7 @@ class UserPostController {
 			const newComment = await this.#commentServices.likeComment(ctx.session.comment._id, ctx.from.id);
 			const author = await this.#userServices.getUserById(newComment.user);
 			ctx.session.comment = newComment;
-			this.#view.changeOfComment(ctx, newComment, author);
+			this.#commonView.changeOfComment(ctx, newComment, author);
 		} else if (data === '🗑') {
 			return this.#nickNameUserView.deleteUserCommentByNickname(ctx);
 		} else {
@@ -153,7 +156,7 @@ class UserPostController {
 			const comment = await this.#commentServices.getCommentById(post.comments[ctx.session.comment_iterator]);
 			ctx.session.comment = comment;
 			const author = await this.#userServices.getUserById(comment.user);
-			this.#view.changeOfComment(ctx, comment, author);
+			this.#commonView.changeOfComment(ctx, comment, author);
 		}
 	}
 
@@ -164,7 +167,7 @@ class UserPostController {
 		if (data === '🖤' || data === '❤️') {
 			const newPost = await this.#postServices.likePost(ctx.session.post._id, ctx.from.id);
 			ctx.session.post = newPost;
-			this.#view.changeOfPost(ctx, newPost);
+			this.#commonView.changeOfPost(ctx, newPost);
 		} else {
 			const newIterator = parseInt(data);
 			if (newIterator < 0) {
@@ -178,21 +181,21 @@ class UserPostController {
 			}
 			const post = await this.#postServices.getPostById(user.posts[ctx.session.post_iterator]);
 			ctx.session.post = post;
-			this.#view.changeOfPost(ctx, post);
+			this.#commonView.changeOfPost(ctx, post);
 		}
 	}
 
 	async updatePost(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			const post = await this.#postServices.getPostById(ctx.session.user.posts[ctx.session.post_iterator]);
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			const post = await this.#postServices.updatePost(ctx.session.user.posts[ctx.session.post_iterator], ctx.from.id, {
 				content: ctx.message.text,
 			});
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		}
 	}
 
@@ -201,46 +204,46 @@ class UserPostController {
 			await this.#postServices.deletePost(ctx.session.user.posts[ctx.session.post_iterator], ctx.from.id);
 			const user = await this.#userServices.getUserByTgId(ctx.from.id);
 			ctx.session.user = user;
-			this.#view.successfullyRemoved(ctx);
+			this.#userPostView.successfullyRemoved(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.no')) {
 			const post = await this.#postServices.getPostById(ctx.session.user.posts[ctx.session.post_iterator]);
-			this.#view.getMyPost(ctx, post);
+			this.#userPostView.getMyPost(ctx, post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
-			this.#view.deletePost(ctx);
+			this.#userPostView.deletePost(ctx);
 		}
 	}
 
 	async updateHashtag(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.getMyPost(ctx, ctx.session.post);
+			this.#userPostView.getMyPost(ctx, ctx.session.post);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.deleteHashtag')) {
-			this.#view.deleteHashtag(ctx);
+			this.#userPostView.deleteHashtag(ctx);
 		} else {
 			const newPost = await this.#postServices.updatePost(ctx.session.post._id, ctx.from.id, {
 				hashtags: ctx.message.text.split(', '),
 			});
 			ctx.session.post = newPost;
 			ctx.reply(ctx.i18n.t('phrases.successfullyUpdateHashtag'));
-			this.#view.getMyPost(ctx, ctx.session.post);
+			this.#userPostView.getMyPost(ctx, ctx.session.post);
 		}
 	}
 
 	async deleteHashtag(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.no')) {
-			this.#view.updateHashtag(ctx);
+			this.#userPostView.updateHashtag(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.yes')) {
 			const newPost = await this.#postServices.updatePost(ctx.session.post._id, ctx.from.id, {
 				hashtags: [],
 			});
 			ctx.session.post = newPost;
 			ctx.reply(ctx.i18n.t('phrases.successfulyDeleteHashtag'));
-			this.#view.getMyPost(ctx, ctx.session.post);
+			this.#userPostView.getMyPost(ctx, ctx.session.post);
 		}
 	}
 }

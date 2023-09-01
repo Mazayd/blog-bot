@@ -1,17 +1,17 @@
 const { RegisterView } = require('../view/register-view');
-const { View } = require('../view/view');
+const { CommonView } = require('../view/common-views');
 
 class RegisterController {
 	#userServices;
 	#postServices;
 	#commentServices;
-	#view;
+	#commonView;
 	#registerView;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
-		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#commonView = new CommonView(UserServices, PostServices, CommentServices);
 		this.#registerView = new RegisterView(UserServices, PostServices, CommentServices);
 	}
 
@@ -43,7 +43,7 @@ class RegisterController {
 			await this.#userServices.updateUser(ctx.from.id, {
 				sex: ctx.message.text,
 			});
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		}
 	}
 }

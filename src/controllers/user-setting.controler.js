@@ -1,4 +1,4 @@
-const { View } = require('../view/view');
+const { CommonView } = require('../view/common-views');
 const { Keyboards } = require('../keyboards/keyboard');
 const { UserSettingView } = require('../view/user-setting-view');
 
@@ -6,21 +6,21 @@ class UserSettingController {
 	#userServices;
 	#postServices;
 	#commentServices;
-	#view;
+	#commonView;
 	#userSettingView;
 	#keyboards;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
-		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#commonView = new CommonView(UserServices, PostServices, CommentServices);
 		this.#keyboards = new Keyboards();
 		this.#userSettingView = new UserSettingView();
 	}
 
 	async userSetting(ctx) {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.userName')) {
 			this.#userSettingView.userSettingName(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.userNickname')) {
@@ -38,7 +38,7 @@ class UserSettingController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#userSettingView.userSetting(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			const user = await this.#userServices.updateUser(ctx.from.id, {
 				name: ctx.message.text,
@@ -51,7 +51,7 @@ class UserSettingController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#userSettingView.userSetting(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			const user = await this.#userServices.getUserByNickName(ctx.message.text);
 			if (user) {
@@ -68,7 +68,7 @@ class UserSettingController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#userSettingView.userSetting(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else {
 			const age = parseInt(ctx.message.text);
 			if (!age) {
@@ -86,7 +86,7 @@ class UserSettingController {
 		if (ctx.message.text === ctx.i18n.t('buttons.back')) {
 			this.#userSettingView.userSetting(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.mainMenu')) {
-			this.#view.mainMenu(ctx);
+			this.#commonView.mainMenu(ctx);
 		} else if (sex.has(ctx.message.text)) {
 			const user = await this.#userServices.updateUser(ctx.from.id, {
 				sex: ctx.message.text,
