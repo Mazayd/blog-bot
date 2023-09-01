@@ -1,27 +1,29 @@
 const UserServices = require('blog-api-lib/services/UserServices');
 const { View } = require('../view/view');
 const { Keyboards } = require('../keyboards/keyboard');
+const { RegisterView } = require('../view/register-view');
 class DefaultActionController {
 	#userServices;
 	#postServices;
 	#commentServices;
 	#view;
+	#registerView;
 	#keyboard;
 	constructor(UserServices, PostServices, CommentServices) {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
 		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#registerView = new RegisterView(UserServices, PostServices, CommentServices);
 		this.#keyboard = new Keyboards();
 	}
 
 	async startReply(ctx) {
 		const user = await this.#userServices.getUserByTgId(ctx.from.id);
 		if (!user) {
-			this.#view.firstChoiceNicknameView(ctx);
+			this.#registerView.firstChoiceNicknameView(ctx);
 		} else {
 			ctx.session.user = user;
-			console.log('ctx.session.user: ', ctx.session.user);
 			const userData = await this.userData(ctx, user);
 			ctx.reply(`${ctx.i18n.t('phrases.mainMenu')}\n\n${userData}`, this.#keyboard.mainMenu(ctx));
 			ctx.scene.enter('mainMenu');
@@ -31,7 +33,7 @@ class DefaultActionController {
 	async noSceneReply(ctx) {
 		const user = await this.#userServices.getUserByTgId(ctx.from.id);
 		if (!user) {
-			this.#view.firstChoiceNicknameView(ctx);
+			this.#registerView.firstChoiceNicknameView(ctx);
 		} else {
 			ctx.session.user = user;
 			const userData = await this.userData(ctx, user);
