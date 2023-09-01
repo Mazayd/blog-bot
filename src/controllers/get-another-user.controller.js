@@ -1,4 +1,4 @@
-const { View } = require('../view/view');
+const { CommonView } = require('../view/common-views');
 const { NameUserView } = require('../view/name-user-view');
 const { Keyboards } = require('../keyboards/keyboard');
 const { NicknameUserView } = require('../view/nickname-user-view');
@@ -7,7 +7,7 @@ class GetAnotherUserController {
 	#userServices;
 	#postServices;
 	#commentServices;
-	#view;
+	#CommonView;
 	#nickNameUserView;
 	#keyboards;
 	#nameUserView;
@@ -15,7 +15,7 @@ class GetAnotherUserController {
 		this.#userServices = UserServices;
 		this.#postServices = PostServices;
 		this.#commentServices = CommentServices;
-		this.#view = new View(UserServices, PostServices, CommentServices);
+		this.#CommonView = new CommonView(UserServices, PostServices, CommentServices);
 		this.#keyboards = new Keyboards();
 		this.#nameUserView = new NameUserView(UserServices, PostServices, CommentServices);
 		this.#nickNameUserView = new NicknameUserView(UserServices, PostServices, CommentServices);
@@ -25,7 +25,7 @@ class GetAnotherUserController {
 		if (ctx.message.text === ctx.i18n.t('buttons.getUserByNickname')) {
 			this.#nickNameUserView.getUserByNickname(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.back')) {
-			this.#view.mainMenu(ctx);
+			this.#CommonView.mainMenu(ctx);
 		} else if (ctx.message.text === ctx.i18n.t('buttons.getUsersByName')) {
 			this.#nameUserView.getUserByName(ctx);
 		}
